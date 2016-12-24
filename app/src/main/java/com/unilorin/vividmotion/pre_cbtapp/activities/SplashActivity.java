@@ -27,11 +27,11 @@ public class SplashActivity extends AppCompatActivity {
                 if (!sharedPreferences.contains(SharedPreferenceContract.NAME)){
                     startActivity(new Intent(SplashActivity.this, SignUpActivity.class));
                 }
-                else if (!sharedPreferences.contains(SharedPreferenceContract.FACULTY)){
-                    startActivity(new Intent(SplashActivity.this, SetupActivity.class));
-                }
                 else if (!sharedPreferences.getBoolean(SharedPreferenceContract.IS_LOGGED_IN, false)){
                     startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                }
+                else if (!sharedPreferences.contains(SharedPreferenceContract.FACULTY)){
+                    startActivity(new Intent(SplashActivity.this, SetupActivity.class));
                 }
                 else {
                     startActivity(new Intent(SplashActivity.this, HomeActivity.class));

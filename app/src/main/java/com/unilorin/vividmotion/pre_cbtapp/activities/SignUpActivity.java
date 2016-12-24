@@ -1,6 +1,7 @@
 package com.unilorin.vividmotion.pre_cbtapp.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.unilorin.vividmotion.pre_cbtapp.R;
+import com.unilorin.vividmotion.pre_cbtapp.managers.data.SharedPreferenceContract;
 import com.unilorin.vividmotion.pre_cbtapp.models.SignUpResponseStatus;
 import com.unilorin.vividmotion.pre_cbtapp.models.User;
 import com.unilorin.vividmotion.pre_cbtapp.network.services.ServiceFactory;
@@ -76,6 +78,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             super.onPostExecute(result);
             switch (result) {
                 case ACCEPTED:
+                    SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferenceContract.FILE_NAME, MODE_PRIVATE);
+                    sharedPreferences.edit()
+                            .putString(SharedPreferenceContract.NAME, name)
+                            .putString(SharedPreferenceContract.EMAIL, emailAddress)
+                            .putString(SharedPreferenceContract.PASSWORD, password)
+                            .putBoolean(SharedPreferenceContract.IS_LOGGED_IN, true).apply();
                     //TODO: do appropriate stuff
                     break;
                 case EMAIL_ALREADY_IN_USE:

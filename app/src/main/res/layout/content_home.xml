@@ -14,5 +14,5 @@
     tools:context="com.unilorin.vividmotion.pre_cbtapp.activities.HomeActivity"
     tools:showIn="@layout/app_bar_home">
 
-    
+
 </RelativeLayout>
