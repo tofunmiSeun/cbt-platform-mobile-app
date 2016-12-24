@@ -8,10 +8,14 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.unilorin.vividmotion.pre_cbtapp.SplashActivity">
+    tools:context="com.unilorin.vividmotion.pre_cbtapp.activities.SplashActivity">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:text="Pre CBT APP"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="20sp"
+        android:textColor="@android:color/black" />
 </RelativeLayout>
