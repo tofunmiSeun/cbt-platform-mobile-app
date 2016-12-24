@@ -5,12 +5,12 @@ package com.unilorin.vividmotion.pre_cbtapp.managers.data;
  */
 public interface SharedPreferenceContract {
     String FILE_NAME = "pre-cbt";
-    String FIRST_NAME = "first-name";
-    String LAST_NAME = "last-name";
+    String NAME = "name";
     String ACADEMIC_LEVEL = "academic-level";
     String FACULTY = "faculty";
     String DEPARTMENT = "department";
     String EMAIL = "e-mail";
     String PHONE_NUMBER = "phone-number";
     String PASSWORD = "password";
+    String IS_LOGGED_IN = "is-logged-in";
 }

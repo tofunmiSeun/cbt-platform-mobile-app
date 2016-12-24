@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -19,8 +18,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private EditText nameEditText;
     private EditText emailAddressEditText;
+    private EditText phoneNumberEditText;
     private EditText passwordEditText;
-    private Button signUpButton;
+    private TextView signUpButton;
     private TextView signInTextView;
 
     @Override
@@ -35,7 +35,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         nameEditText = (EditText) findViewById(R.id.nameEditText);
         emailAddressEditText = (EditText) findViewById(R.id.emailAddressEditText);
         passwordEditText = (EditText) findViewById(R.id.passwordEditText);
-        signUpButton = (Button) findViewById(R.id.signUpButton);
+        phoneNumberEditText = (EditText) findViewById(R.id.phoneNumberEditText);
+        signUpButton = (TextView) findViewById(R.id.signUpButton);
         signInTextView = (TextView) findViewById(R.id.signInTextView);
 
         signUpButton.setOnClickListener(this);
