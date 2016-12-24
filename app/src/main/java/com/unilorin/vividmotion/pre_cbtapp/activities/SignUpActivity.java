@@ -2,23 +2,20 @@ package com.unilorin.vividmotion.pre_cbtapp.activities;
 
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.unilorin.vividmotion.pre_cbtapp.R;
-import com.unilorin.vividmotion.pre_cbtapp.entities.SignUpResponseStatus;
-import com.unilorin.vividmotion.pre_cbtapp.entities.User;
-import com.unilorin.vividmotion.pre_cbtapp.services.UserAccountService;
+import com.unilorin.vividmotion.pre_cbtapp.models.SignUpResponseStatus;
+import com.unilorin.vividmotion.pre_cbtapp.models.User;
+import com.unilorin.vividmotion.pre_cbtapp.network.services.ServiceFactory;
+import com.unilorin.vividmotion.pre_cbtapp.network.services.UserAccountService;
 
-import static com.unilorin.vividmotion.pre_cbtapp.entities.UserSignUpResponseObject.ACCEPTED;
-import static com.unilorin.vividmotion.pre_cbtapp.entities.UserSignUpResponseObject.EMAIL_ALREADY_IN_USE;
-
-public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
+public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText nameEditText;
     private EditText emailAddressEditText;
@@ -34,7 +31,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         instantiateViewObjects();
     }
 
-    private void instantiateViewObjects(){
+    private void instantiateViewObjects() {
         nameEditText = (EditText) findViewById(R.id.nameEditText);
         emailAddressEditText = (EditText) findViewById(R.id.emailAddressEditText);
         passwordEditText = (EditText) findViewById(R.id.passwordEditText);
@@ -47,10 +44,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        if (v == signUpButton){
+        if (v == signUpButton) {
             new RegisterUserTask().execute();
         }
-        else if (v == signInTextView){
+        else if (v == signInTextView) {
             Intent signInIntent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(signInIntent);
         }
@@ -58,25 +55,25 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private class RegisterUserTask extends AsyncTask<Void, Void, SignUpResponseStatus> {
 
-        private final String name  = nameEditText.getText().toString();
-        private final String emailAddress  = emailAddressEditText.getText().toString();
-        private final String password  = passwordEditText.getText().toString();
+        private final String name = nameEditText.getText().toString();
+        private final String emailAddress = emailAddressEditText.getText().toString();
+        private final String password = passwordEditText.getText().toString();
 
         @Override
-        protected SignUpResponseStatus  doInBackground(Void... params) {
+        protected SignUpResponseStatus doInBackground(Void... params) {
             User user = new User();
             user.setName(name);
             user.setEmailAddress(emailAddress);
             user.setPassword(password);
 
-            UserAccountService registrationService = new UserAccountService();
+            UserAccountService registrationService = ServiceFactory.getInstance().getUserAccountService();
             return registrationService.registerNewUser(user);
         }
 
         @Override
         protected void onPostExecute(SignUpResponseStatus result) {
             super.onPostExecute(result);
-            switch (result){
+            switch (result) {
                 case ACCEPTED:
                     //TODO: do appropriate stuff
                     break;

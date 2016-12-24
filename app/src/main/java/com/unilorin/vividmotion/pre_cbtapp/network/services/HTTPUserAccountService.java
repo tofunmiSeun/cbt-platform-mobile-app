@@ -1,13 +1,14 @@
-package com.unilorin.vividmotion.pre_cbtapp.services;
+package com.unilorin.vividmotion.pre_cbtapp.network.services;
 
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.unilorin.vividmotion.pre_cbtapp.entities.LoginResponseStatus;
-import com.unilorin.vividmotion.pre_cbtapp.entities.SignUpResponseStatus;
-import com.unilorin.vividmotion.pre_cbtapp.entities.User;
-import com.unilorin.vividmotion.pre_cbtapp.entities.UserLoginResponseObject;
-import com.unilorin.vividmotion.pre_cbtapp.entities.UserSignUpResponseObject;
+import com.unilorin.vividmotion.pre_cbtapp.models.LoginResponseStatus;
+import com.unilorin.vividmotion.pre_cbtapp.models.SignUpResponseStatus;
+import com.unilorin.vividmotion.pre_cbtapp.models.User;
+import com.unilorin.vividmotion.pre_cbtapp.models.UserLoginResponseObject;
+import com.unilorin.vividmotion.pre_cbtapp.models.UserSignUpResponseObject;
+import com.unilorin.vividmotion.pre_cbtapp.network.URLContract;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
@@ -22,22 +23,21 @@ import java.util.Map;
  * Created by Tofunmi on 20/12/2016.
  */
 
-public class UserAccountService {
+public class HTTPUserAccountService implements UserAccountService {
 
     private static final String TAG = "UserAccountService";
-
-    private final static String URL = "http://192.168.43.104:9000";
     private RestTemplate restTemplate;
 
-    public UserAccountService(){
+    public HTTPUserAccountService(){
         restTemplate = new RestTemplate();
         Gson gsonObject = new Gson();
         restTemplate.getMessageConverters().add(new GsonHttpMessageConverter(gsonObject));
     }
 
+    @Override
     public SignUpResponseStatus registerNewUser(User user){
         try {
-            ResponseEntity<UserSignUpResponseObject> responseEntity = restTemplate.postForEntity(URL + "/api/user/register", user, UserSignUpResponseObject.class);
+            ResponseEntity<UserSignUpResponseObject> responseEntity = restTemplate.postForEntity(URLContract.REGISTER_USER_URL, user, UserSignUpResponseObject.class);
 
             UserSignUpResponseObject responseObject = responseEntity.getBody();
             switch (responseObject.getStatus()){
@@ -65,13 +65,14 @@ public class UserAccountService {
         }
     }
 
+    @Override
     public LoginResponseStatus loginUser(String emailAddress, String password){
         try {
             Map<String, String> loginCredentials = new HashMap<>();
             loginCredentials.put("emailAddress", emailAddress);
             loginCredentials.put("password", password);
 
-            ResponseEntity<UserLoginResponseObject> responseEntity = restTemplate.postForEntity(URL + "/api/user/login", loginCredentials, UserLoginResponseObject.class);
+            ResponseEntity<UserLoginResponseObject> responseEntity = restTemplate.postForEntity(URLContract.LOGIN_USER_URL, loginCredentials, UserLoginResponseObject.class);
 
             UserLoginResponseObject userLoginResponseObject = responseEntity.getBody();
             switch (userLoginResponseObject.getStatus()){
