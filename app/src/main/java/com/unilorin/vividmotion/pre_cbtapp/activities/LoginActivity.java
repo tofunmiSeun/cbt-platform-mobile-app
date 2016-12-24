@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         protected LoginResponseStatus doInBackground(Void... params) {
 
-            UserAccountService registrationService = ServiceFactory.getInstance().getUserAccountService();
+            UserAccountService registrationService = ServiceFactory.getInstance().getUserAccountService(getApplicationContext());
             return registrationService.loginUser(emailAddress, password);
         }
 

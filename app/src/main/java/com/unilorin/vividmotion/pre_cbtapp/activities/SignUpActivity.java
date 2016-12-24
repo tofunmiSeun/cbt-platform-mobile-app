@@ -67,7 +67,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             user.setEmailAddress(emailAddress);
             user.setPassword(password);
 
-            UserAccountService registrationService = ServiceFactory.getInstance().getUserAccountService();
+            UserAccountService registrationService = ServiceFactory.getInstance().getUserAccountService(getApplicationContext());
             return registrationService.registerNewUser(user);
         }
 
@@ -77,6 +77,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             switch (result) {
                 case ACCEPTED:
                     //TODO: do appropriate stuff
+                    startActivity(new Intent(SignUpActivity.this, SetupActivity.class));
                     break;
                 case EMAIL_ALREADY_IN_USE:
                     //TODO: do appropriate stuff

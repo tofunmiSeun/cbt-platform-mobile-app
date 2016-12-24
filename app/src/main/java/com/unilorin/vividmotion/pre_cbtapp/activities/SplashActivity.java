@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.unilorin.vividmotion.pre_cbtapp.R;
+import com.unilorin.vividmotion.pre_cbtapp.database.UserAccountDBHelper;
 import com.unilorin.vividmotion.pre_cbtapp.managers.data.SharedPreferenceContract;
+import com.unilorin.vividmotion.pre_cbtapp.models.StudentProfile;
+import com.unilorin.vividmotion.pre_cbtapp.models.User;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -22,16 +25,14 @@ public class SplashActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferenceContract.FILE_NAME, MODE_PRIVATE);
+                UserAccountDBHelper userAccountDBHelper = new UserAccountDBHelper(getApplicationContext());
+                User loggedInUser = userAccountDBHelper.getUser();
 
-                if (!sharedPreferences.contains(SharedPreferenceContract.NAME)){
-                    startActivity(new Intent(SplashActivity.this, SignUpActivity.class));
-                }
-                else if (!sharedPreferences.contains(SharedPreferenceContract.FACULTY)){
-                    startActivity(new Intent(SplashActivity.this, SetupActivity.class));
-                }
-                else if (!sharedPreferences.getBoolean(SharedPreferenceContract.IS_LOGGED_IN, false)){
+                if (loggedInUser == null){
                     startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                }
+                else if (loggedInUser.getStudentProfile() == null){
+                    startActivity(new Intent(SplashActivity.this, SetupActivity.class));
                 }
                 else {
                     startActivity(new Intent(SplashActivity.this, HomeActivity.class));

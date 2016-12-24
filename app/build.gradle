@@ -28,5 +28,5 @@ dependencies {
     compile 'org.springframework.android:spring-android-rest-template:1.0.1.RELEASE'
     compile 'com.google.code.gson:gson:2.6.2'
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:design:25.0.0'
+    compile 'com.android.support:design:24.0.0'
 }
