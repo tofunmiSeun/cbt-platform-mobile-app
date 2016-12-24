@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.unilorin.vividmotion.pre_cbtapp.R;
+import com.unilorin.vividmotion.pre_cbtapp.entities.LoginResponseStatus;
 import com.unilorin.vividmotion.pre_cbtapp.entities.User;
 import com.unilorin.vividmotion.pre_cbtapp.entities.UserLoginResponseObject;
 import com.unilorin.vividmotion.pre_cbtapp.services.UserAccountService;
@@ -51,31 +52,33 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private class LoginTask extends AsyncTask<Void, Void, UserLoginResponseObject> {
+    private class LoginTask extends AsyncTask<Void, Void, LoginResponseStatus> {
 
         private final String emailAddress  = emailAddressEditText.getText().toString();
         private final String password  = passwordEditText.getText().toString();
 
         @Override
-        protected UserLoginResponseObject doInBackground(Void... params) {
+        protected LoginResponseStatus doInBackground(Void... params) {
 
             UserAccountService registrationService = new UserAccountService();
             return registrationService.loginUser(emailAddress, password);
         }
 
         @Override
-        protected void onPostExecute(UserLoginResponseObject result) {
+        protected void onPostExecute(LoginResponseStatus result) {
             super.onPostExecute(result);
-            switch (result.getStatus()){
-                case UserLoginResponseObject.ACCEPTED:
-                    // move on
-                    User user = result.getUser();
+            switch (result){
+                case ACCEPTED:
+                    //TODO: do appropriate stuff
                     break;
-                case UserLoginResponseObject.INCORRECT_PASSWORD:
-                    // show appropriate error message
+                case INCORRECT_PASSWORD:
+                    //TODO: do appropriate stuff
                     break;
-                case UserLoginResponseObject.NO_ACCOUNT_FOR_THIS_EMAIL: default:
-                    // show appropriate error message
+                case NO_ACCOUNT_FOR_THIS_EMAIL:
+                    //TODO: do appropriate stuff
+                    break;
+                case UNKNOWN_ERROR:
+                    //TODO: do appropriate stuff
                     break;
             }
         }

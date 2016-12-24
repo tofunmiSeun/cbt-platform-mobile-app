@@ -11,8 +11,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.unilorin.vividmotion.pre_cbtapp.R;
+import com.unilorin.vividmotion.pre_cbtapp.entities.SignUpResponseStatus;
 import com.unilorin.vividmotion.pre_cbtapp.entities.User;
 import com.unilorin.vividmotion.pre_cbtapp.services.UserAccountService;
+
+import static com.unilorin.vividmotion.pre_cbtapp.entities.UserSignUpResponseObject.ACCEPTED;
+import static com.unilorin.vividmotion.pre_cbtapp.entities.UserSignUpResponseObject.EMAIL_ALREADY_IN_USE;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -52,14 +56,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private class RegisterUserTask extends AsyncTask<Void, Void, Boolean> {
+    private class RegisterUserTask extends AsyncTask<Void, Void, SignUpResponseStatus> {
 
         private final String name  = nameEditText.getText().toString();
         private final String emailAddress  = emailAddressEditText.getText().toString();
         private final String password  = passwordEditText.getText().toString();
 
         @Override
-        protected Boolean  doInBackground(Void... params) {
+        protected SignUpResponseStatus  doInBackground(Void... params) {
             User user = new User();
             user.setName(name);
             user.setEmailAddress(emailAddress);
@@ -70,9 +74,19 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
 
         @Override
-        protected void onPostExecute(Boolean result) {
+        protected void onPostExecute(SignUpResponseStatus result) {
             super.onPostExecute(result);
-            Toast.makeText(getBaseContext(), result?"Success!" : "Failed!", Toast.LENGTH_LONG).show();
+            switch (result){
+                case ACCEPTED:
+                    //TODO: do appropriate stuff
+                    break;
+                case EMAIL_ALREADY_IN_USE:
+                    //TODO: do appropriate stuff
+                    break;
+                case UNKNOWN_ERROR:
+                    //TODO: do appropriate stuff
+                    break;
+            }
         }
     }
 }
