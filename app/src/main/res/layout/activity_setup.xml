@@ -17,12 +17,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="80dp"
-        android:text="Select your faculty"
+        android:text="Faculty"
         android:textColor="@android:color/black"/>
 
 
     <android.support.v7.widget.AppCompatSpinner
-        android:id="@+id/facultyInputLayout"
+        android:id="@+id/facultySpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -34,14 +34,14 @@
         android:id="@+id/departmentTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/facultyInputLayout"
-        android:layout_marginTop="10dp"
-        android:text="Select your department"
+        android:layout_below="@id/facultySpinner"
+        android:layout_marginTop="15sp"
+        android:text="Department"
         android:textColor="@android:color/black"/>
 
 
     <android.support.v7.widget.AppCompatSpinner
-        android:id="@+id/departmentInputLayout"
+        android:id="@+id/departmentSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -52,30 +52,31 @@
         android:id="@+id/levelTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/departmentInputLayout"
-        android:layout_marginTop="10dp"
-        android:text="Select your level"
+        android:layout_below="@id/departmentSpinner"
+        android:layout_marginTop="15sp"
+        android:text="Level"
         android:textColor="@android:color/black"/>
 
     <android.support.v7.widget.AppCompatSpinner
-        android:id="@+id/levelInputLayout"
+        android:id="@+id/levelSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/levelTextView"
         android:layout_marginTop="10dp"/>
 
-    <TextView
+    <Button
 
         android:id="@+id/continueButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/levelInputLayout"
+        android:layout_below="@+id/levelSpinner"
         android:layout_marginEnd="10dp"
         android:layout_marginTop="30dp"
         android:text="CONTINUE"
         android:textColor="#4a4a4a"
         android:textSize="16sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        style="@style/Widget.AppCompat.Button.Borderless" />
 </RelativeLayout>

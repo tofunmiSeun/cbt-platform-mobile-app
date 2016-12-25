@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -21,7 +22,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private EditText emailAddressEditText;
     private EditText passwordEditText;
-    private TextView signInButton;
+    private Button signInButton;
 
     private TextView signUpTextVIew;
 
@@ -37,7 +38,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         signUpTextVIew = (TextView) findViewById(R.id.registerTextView);
         emailAddressEditText = (EditText) findViewById(R.id.emailAddressEditText);
         passwordEditText = (EditText) findViewById(R.id.passwordEditText);
-        signInButton = (TextView) findViewById(R.id.signInButton);
+        signInButton = (Button) findViewById(R.id.signInButton);
 
         signInButton.setOnClickListener(this);
         signUpTextVIew.setOnClickListener(this);
