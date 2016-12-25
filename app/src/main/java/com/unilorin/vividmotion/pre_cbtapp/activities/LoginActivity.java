@@ -10,9 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.unilorin.vividmotion.pre_cbtapp.R;
 import com.unilorin.vividmotion.pre_cbtapp.managers.data.SharedPreferenceContract;
 import com.unilorin.vividmotion.pre_cbtapp.models.LoginResponseStatus;
+import com.unilorin.vividmotion.pre_cbtapp.models.User;
 import com.unilorin.vividmotion.pre_cbtapp.network.services.ServiceFactory;
 import com.unilorin.vividmotion.pre_cbtapp.network.services.UserAccountService;
 
@@ -61,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         protected LoginResponseStatus doInBackground(Void... params) {
 
-            UserAccountService registrationService = ServiceFactory.getInstance().getUserAccountService();
+            UserAccountService registrationService = ServiceFactory.getInstance().getUserAccountService(getApplicationContext());
             return registrationService.loginUser(emailAddress, password);
         }
 
@@ -71,12 +73,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             switch (result) {
                 case ACCEPTED:
                     SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferenceContract.FILE_NAME, MODE_PRIVATE);
+
                     sharedPreferences.edit().putBoolean(SharedPreferenceContract.IS_LOGGED_IN, true).apply();
-                    if (!sharedPreferences.contains(SharedPreferenceContract.FACULTY)) {
-                        startActivity(new Intent(LoginActivity.this, SetupActivity.class));
-                    }
-                    else {
-                        startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+
+                    User currentUser = new Gson().fromJson(sharedPreferences.getString(SharedPreferenceContract.USER_ACCOUNT_JSON_STRING, null), User.class);
+
+                    if (currentUser != null){
+                        if (currentUser.getStudentProfile() != null){
+                            startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
+                        }else{
+                            startActivity(new Intent(LoginActivity.this, SetupActivity.class));
+                        }
                     }
                     finish();
                     break;

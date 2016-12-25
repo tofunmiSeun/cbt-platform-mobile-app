@@ -69,7 +69,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             user.setEmailAddress(emailAddress);
             user.setPassword(password);
 
-            UserAccountService registrationService = ServiceFactory.getInstance().getUserAccountService();
+            UserAccountService registrationService = ServiceFactory.getInstance().getUserAccountService(getApplicationContext());
             return registrationService.registerNewUser(user);
         }
 
@@ -78,13 +78,17 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             super.onPostExecute(result);
             switch (result) {
                 case ACCEPTED:
+
                     SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferenceContract.FILE_NAME, MODE_PRIVATE);
                     sharedPreferences.edit()
-                            .putString(SharedPreferenceContract.NAME, name)
+//                            .putString(SharedPreferenceContract.NAME, name)
                             .putString(SharedPreferenceContract.EMAIL, emailAddress)
                             .putString(SharedPreferenceContract.PASSWORD, password)
                             .putBoolean(SharedPreferenceContract.IS_LOGGED_IN, true).apply();
                     //TODO: do appropriate stuff
+
+                    startActivity(new Intent(SignUpActivity.this, SetupActivity.class));
+
                     break;
                 case EMAIL_ALREADY_IN_USE:
                     //TODO: do appropriate stuff

@@ -10,6 +10,8 @@ public class User {
     private String emailAddress;
     private String password;
 
+    private StudentProfile studentProfile;
+
     public String getName() {
         return name;
     }
@@ -32,5 +34,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public StudentProfile getStudentProfile() {
+        return studentProfile;
+    }
+
+    public void setStudentProfile(StudentProfile studentProfile) {
+        this.studentProfile = studentProfile;
     }
 }
