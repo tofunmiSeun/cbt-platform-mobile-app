@@ -76,7 +76,6 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             super.onPostExecute(result);
             switch (result) {
                 case ACCEPTED:
-                    //TODO: do appropriate stuff
                     startActivity(new Intent(SignUpActivity.this, SetupActivity.class));
                     break;
                 case EMAIL_ALREADY_IN_USE:

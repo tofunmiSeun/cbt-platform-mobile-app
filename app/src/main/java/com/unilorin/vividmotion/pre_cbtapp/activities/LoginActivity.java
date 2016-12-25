@@ -1,6 +1,7 @@
 package com.unilorin.vividmotion.pre_cbtapp.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,8 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.unilorin.vividmotion.pre_cbtapp.R;
+import com.unilorin.vividmotion.pre_cbtapp.managers.data.SharedPreferenceContract;
 import com.unilorin.vividmotion.pre_cbtapp.models.LoginResponseStatus;
+import com.unilorin.vividmotion.pre_cbtapp.models.User;
 import com.unilorin.vividmotion.pre_cbtapp.network.services.ServiceFactory;
 import com.unilorin.vividmotion.pre_cbtapp.network.services.UserAccountService;
 
@@ -67,7 +71,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             super.onPostExecute(result);
             switch (result){
                 case ACCEPTED:
-                    //TODO: do appropriate stuff
+                    SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferenceContract.FILE_NAME, MODE_PRIVATE);
+                    User currentUser = new Gson().fromJson(sharedPreferences.getString(SharedPreferenceContract.USER_ACCOUNT_JSON_STRING, null), User.class);
+
+                    if (currentUser != null){
+                        if (currentUser.getStudentProfile() != null){
+                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                        }else{
+                            startActivity(new Intent(LoginActivity.this, SetupActivity.class));
+                        }
+                    }
                     break;
                 case INCORRECT_PASSWORD:
                     //TODO: do appropriate stuff

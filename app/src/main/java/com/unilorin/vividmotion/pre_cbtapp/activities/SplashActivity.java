@@ -5,8 +5,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.gson.Gson;
 import com.unilorin.vividmotion.pre_cbtapp.R;
+import com.unilorin.vividmotion.pre_cbtapp.database.DBContract;
 import com.unilorin.vividmotion.pre_cbtapp.managers.data.SharedPreferenceContract;
+import com.unilorin.vividmotion.pre_cbtapp.models.User;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -23,11 +26,12 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferenceContract.FILE_NAME, MODE_PRIVATE);
+                User currentUser = new Gson().fromJson(sharedPreferences.getString(SharedPreferenceContract.USER_ACCOUNT_JSON_STRING, null), User.class);
 
-                if (!sharedPreferences.contains(SharedPreferenceContract.USER_ACCOUNT_JSON_STRING)){
+                if (currentUser == null){
                     startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                 }
-                else if (!sharedPreferences.contains(SharedPreferenceContract.STUDENT_PROFILE_JSON_STRING)){
+                else if (currentUser.getStudentProfile() == null){
                     startActivity(new Intent(SplashActivity.this, SetupActivity.class));
                 }
                 else {
