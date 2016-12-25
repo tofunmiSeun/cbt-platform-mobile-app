@@ -16,14 +16,14 @@
         android:id="@+id/emailAddressInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/textView"
-        android:layout_marginTop="50sp">
+        android:layout_marginTop="80sp">
 
         <EditText
             android:id="@+id/emailAddressEditText"
             android:layout_width="match_parent"
+            android:inputType="textEmailAddress"
             android:layout_height="wrap_content"
             android:hint="Email Address"/>
     </android.support.design.widget.TextInputLayout>
@@ -32,10 +32,9 @@
         android:id="@+id/passwordInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/emailAddressInputLayout"
-        android:layout_alignParentLeft="false"
+        android:layout_alignStart="@+id/emailAddressInputLayout"
         android:layout_alignParentStart="false"
-        android:layout_alignRight="@+id/emailAddressInputLayout"
+        android:layout_alignEnd="@+id/emailAddressInputLayout"
         android:layout_below="@+id/emailAddressInputLayout"
         android:layout_marginTop="20sp">
 
@@ -47,13 +46,17 @@
             android:inputType="textPassword"/>
     </android.support.design.widget.TextInputLayout>
 
-    <Button
+    <TextView
         android:id="@+id/signInButton"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/passwordInputLayout"
-        android:layout_marginTop="20sp"
-        android:text="Sign in"/>
+        android:layout_marginTop="30dp"
+        android:textStyle="bold"
+        android:layout_marginEnd="10dp"
+        android:textSize="16sp"
+        android:layout_alignParentEnd="true"
+        android:text="SIGN IN"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -73,7 +76,7 @@
             android:id="@+id/registerTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15sp"
+            android:layout_marginStart="15sp"
             android:layout_weight="1"
             android:text="REGISTER"/>
 
