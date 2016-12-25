@@ -6,10 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.unilorin.vividmotion.pre_cbtapp.R;
-import com.unilorin.vividmotion.pre_cbtapp.database.UserAccountDBHelper;
 import com.unilorin.vividmotion.pre_cbtapp.managers.data.SharedPreferenceContract;
-import com.unilorin.vividmotion.pre_cbtapp.models.StudentProfile;
-import com.unilorin.vividmotion.pre_cbtapp.models.User;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -25,13 +22,12 @@ public class SplashActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                UserAccountDBHelper userAccountDBHelper = new UserAccountDBHelper(getApplicationContext());
-                User loggedInUser = userAccountDBHelper.getUser();
+                SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferenceContract.FILE_NAME, MODE_PRIVATE);
 
-                if (loggedInUser == null){
+                if (!sharedPreferences.contains(SharedPreferenceContract.USER_ACCOUNT_JSON_STRING)){
                     startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                 }
-                else if (loggedInUser.getStudentProfile() == null){
+                else if (!sharedPreferences.contains(SharedPreferenceContract.STUDENT_PROFILE_JSON_STRING)){
                     startActivity(new Intent(SplashActivity.this, SetupActivity.class));
                 }
                 else {

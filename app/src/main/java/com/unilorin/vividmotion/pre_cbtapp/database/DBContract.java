@@ -7,8 +7,5 @@ import android.provider.BaseColumns;
  */
 
 public class DBContract {
-    public static class UserContract implements BaseColumns{
-        public static final String tableName  = "userTable";
-        public static final String userObjectColumn  = "userObjectColumn";
-    }
+
 }

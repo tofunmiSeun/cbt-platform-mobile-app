@@ -5,8 +5,8 @@ package com.unilorin.vividmotion.pre_cbtapp.managers.data;
  */
 public interface SharedPreferenceContract {
     String FILE_NAME = "pre-cbt";
-    String NAME = "name";
-    String ACADEMIC_LEVEL = "academic-level";
+    String USER_ACCOUNT_JSON_STRING = "user-object";
+    String STUDENT_PROFILE_JSON_STRING = "student-profile";
     String FACULTY = "faculty";
     String DEPARTMENT = "department";
     String EMAIL = "e-mail";

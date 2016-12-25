@@ -1,10 +1,11 @@
 package com.unilorin.vividmotion.pre_cbtapp.network.services;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import com.unilorin.vividmotion.pre_cbtapp.database.UserAccountDBHelper;
+import com.unilorin.vividmotion.pre_cbtapp.managers.data.SharedPreferenceContract;
 import com.unilorin.vividmotion.pre_cbtapp.models.LoginResponseStatus;
 import com.unilorin.vividmotion.pre_cbtapp.models.SignUpResponseStatus;
 import com.unilorin.vividmotion.pre_cbtapp.models.User;
@@ -20,6 +21,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Tofunmi on 20/12/2016.
@@ -46,8 +49,12 @@ public class HTTPUserAccountService implements UserAccountService {
             UserSignUpResponseObject responseObject = responseEntity.getBody();
             switch (responseObject.getStatus()) {
                 case UserSignUpResponseObject.ACCEPTED:
-                    UserAccountDBHelper userAccountDBHelper = new UserAccountDBHelper(appContext);
-                    userAccountDBHelper.insertUser(responseObject.getUser());
+
+                    SharedPreferences sharedPreferences = appContext.getSharedPreferences(SharedPreferenceContract.FILE_NAME, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString(SharedPreferenceContract.USER_ACCOUNT_JSON_STRING, new Gson().toJson(responseObject.getUser()));
+                    editor.apply();
+
                     return SignUpResponseStatus.ACCEPTED;
 
                 case UserSignUpResponseObject.EMAIL_ALREADY_IN_USE:
@@ -81,8 +88,12 @@ public class HTTPUserAccountService implements UserAccountService {
             UserLoginResponseObject userLoginResponseObject = responseEntity.getBody();
             switch (userLoginResponseObject.getStatus()) {
                 case UserLoginResponseObject.ACCEPTED:
-                    UserAccountDBHelper userAccountDBHelper = new UserAccountDBHelper(appContext);
-                    userAccountDBHelper.insertUser(userLoginResponseObject.getUser());
+
+                    SharedPreferences sharedPreferences = appContext.getSharedPreferences(SharedPreferenceContract.FILE_NAME, MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString(SharedPreferenceContract.USER_ACCOUNT_JSON_STRING, new Gson().toJson(userLoginResponseObject.getUser()));
+                    editor.apply();
+
                     return LoginResponseStatus.ACCEPTED;
 
                 case UserLoginResponseObject.INCORRECT_PASSWORD:
