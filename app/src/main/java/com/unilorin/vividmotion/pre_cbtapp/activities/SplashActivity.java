@@ -17,24 +17,24 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferenceContract.FILE_NAME, MODE_PRIVATE);
 
-                if (!sharedPreferences.contains(SharedPreferenceContract.NAME)){
+                if (!sharedPreferences.contains(SharedPreferenceContract.NAME)) {
                     startActivity(new Intent(SplashActivity.this, SignUpActivity.class));
                 }
-                else if (!sharedPreferences.getBoolean(SharedPreferenceContract.IS_LOGGED_IN, false)){
+                else if (!sharedPreferences.getBoolean(SharedPreferenceContract.IS_LOGGED_IN, false)) {
                     startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                 }
-                else if (!sharedPreferences.contains(SharedPreferenceContract.FACULTY)){
+                else if (!sharedPreferences.contains(SharedPreferenceContract.FACULTY)) {
                     startActivity(new Intent(SplashActivity.this, SetupActivity.class));
                 }
                 else {
-                    startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                    startActivity(new Intent(SplashActivity.this, DashboardActivity.class));
                 }
                 finish();
             }

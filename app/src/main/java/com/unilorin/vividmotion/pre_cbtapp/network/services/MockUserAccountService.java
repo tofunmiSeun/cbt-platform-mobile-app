@@ -11,11 +11,11 @@ public class MockUserAccountService implements UserAccountService {
 
     @Override
     public SignUpResponseStatus registerNewUser(User user) {
-        return null;
+        return SignUpResponseStatus.EMAIL_ALREADY_IN_USE;
     }
 
     @Override
     public LoginResponseStatus loginUser(String emailAddress, String password) {
-        return null;
+        return LoginResponseStatus.ACCEPTED;
     }
 }
