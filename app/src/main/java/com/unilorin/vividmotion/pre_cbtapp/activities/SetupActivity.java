@@ -33,7 +33,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
     private Faculty selectedFaculty;
     private Department selectedDepartment;
-    private int selectedLevel;
+    private int selectedLevelValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +116,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         levelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedLevel = position + 1;
+                selectedLevelValue = position + 1;
             }
 
             @Override
@@ -132,7 +132,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             StudentProfile studentProfile = new StudentProfile();
             studentProfile.setFaculty(selectedFaculty);
             studentProfile.setDepartment(selectedDepartment);
-            studentProfile.setLevel(selectedLevel);
+            studentProfile.setNumericalValueOfStudentLevel(selectedLevelValue);
 
             final StudentProfile profileToSave = studentProfile;
             new Thread(new Runnable() {
