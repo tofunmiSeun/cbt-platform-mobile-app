@@ -9,8 +9,6 @@ import com.unilorin.vividmotion.pre_cbtapp.managers.data.SharedPreferenceContrac
 import com.unilorin.vividmotion.pre_cbtapp.models.LoginResponseStatus;
 import com.unilorin.vividmotion.pre_cbtapp.models.SignUpResponseStatus;
 import com.unilorin.vividmotion.pre_cbtapp.models.User;
-import com.unilorin.vividmotion.pre_cbtapp.models.UserLoginResponseObject;
-import com.unilorin.vividmotion.pre_cbtapp.models.UserSignUpResponseObject;
 import com.unilorin.vividmotion.pre_cbtapp.network.URLContract;
 
 import org.springframework.http.ResponseEntity;
@@ -47,12 +45,12 @@ public class HTTPUserAccountService implements UserAccountService {
             ResponseEntity<UserSignUpResponseObject> responseEntity = restTemplate.postForEntity(URLContract.REGISTER_USER_URL, user, UserSignUpResponseObject.class);
 
             UserSignUpResponseObject responseObject = responseEntity.getBody();
-            switch (responseObject.getStatus()) {
+            switch (responseObject.status) {
                 case UserSignUpResponseObject.ACCEPTED:
 
                     SharedPreferences sharedPreferences = appContext.getSharedPreferences(SharedPreferenceContract.FILE_NAME, MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString(SharedPreferenceContract.USER_ACCOUNT_JSON_STRING, new Gson().toJson(responseObject.getUser()));
+                    editor.putString(SharedPreferenceContract.USER_ACCOUNT_JSON_STRING, new Gson().toJson(responseObject.user));
                     editor.apply();
 
                     return SignUpResponseStatus.ACCEPTED;
@@ -86,12 +84,12 @@ public class HTTPUserAccountService implements UserAccountService {
             ResponseEntity<UserLoginResponseObject> responseEntity = restTemplate.postForEntity(URLContract.LOGIN_USER_URL, loginCredentials, UserLoginResponseObject.class);
 
             UserLoginResponseObject userLoginResponseObject = responseEntity.getBody();
-            switch (userLoginResponseObject.getStatus()) {
+            switch (userLoginResponseObject.status) {
                 case UserLoginResponseObject.ACCEPTED:
 
                     SharedPreferences sharedPreferences = appContext.getSharedPreferences(SharedPreferenceContract.FILE_NAME, MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString(SharedPreferenceContract.USER_ACCOUNT_JSON_STRING, new Gson().toJson(userLoginResponseObject.getUser()));
+                    editor.putString(SharedPreferenceContract.USER_ACCOUNT_JSON_STRING, new Gson().toJson(userLoginResponseObject.user));
                     editor.apply();
 
                     return LoginResponseStatus.ACCEPTED;
@@ -115,6 +113,24 @@ public class HTTPUserAccountService implements UserAccountService {
             Log.e(TAG, e.getMessage());
             return LoginResponseStatus.UNKNOWN_ERROR;
         }
+    }
+
+    private class UserLoginResponseObject {
+        private static final int ACCEPTED = 0;
+        private static final int INVALID_CREDENTIALS = 1;
+        private static final int NO_ACCOUNT_FOR_THIS_EMAIL = 2;
+        private static final int INCORRECT_PASSWORD = 3;
+
+        private int status;
+        private User user;
+    }
+
+    private class UserSignUpResponseObject {
+        private static final int ACCEPTED = 0;
+        private static final int EMAIL_ALREADY_IN_USE = 1;
+
+        private int status;
+        private User user;
     }
 
 }
