@@ -7,7 +7,6 @@ import com.google.gson.Gson;
 import com.unilorin.vividmotion.pre_cbtapp.models.Course;
 import com.unilorin.vividmotion.pre_cbtapp.network.URLContract;
 
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.HttpClientErrorException;
@@ -34,7 +33,7 @@ public class HTTPCourseService {
         appContext = c;
     }
 
-    private List<Course> getAvailableCourses(){
+    public List<Course> getAvailableCourses(){
         try {
             String url = URLContract.SERVER_URL;
             ResponseEntity<CourseResponseObject> responseEntity = restTemplate.getForEntity(url, CourseResponseObject.class);
@@ -49,6 +48,14 @@ public class HTTPCourseService {
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
             return new ArrayList<>();
+        }
+    }
+
+    public void assignCoursesToUser(List<Course> courses){
+        try {
+
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
         }
     }
 
