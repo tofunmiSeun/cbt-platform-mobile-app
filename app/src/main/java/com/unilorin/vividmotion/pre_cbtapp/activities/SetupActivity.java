@@ -134,12 +134,18 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             studentProfile.setDepartment(selectedDepartment);
             studentProfile.setLevel(selectedLevel);
 
-            boolean result = studentProfileService.saveStudentProfileForCurrentUser(studentProfile);
-            if (result){
-                startActivity(new Intent(SetupActivity.this, DashboardActivity.class));
-            }else{
-                //TODO: issue 'an error occurred' message
-            }
+            final StudentProfile profileToSave = studentProfile;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    boolean result = studentProfileService.saveStudentProfileForCurrentUser(profileToSave);
+                    if (result){
+                        startActivity(new Intent(SetupActivity.this, DashboardActivity.class));
+                    }else{
+                        //TODO: issue 'an error occurred' message
+                    }
+                }
+            }).start();
         }
     }
 
