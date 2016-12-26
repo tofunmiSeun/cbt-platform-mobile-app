@@ -7,5 +7,11 @@ import android.provider.BaseColumns;
  */
 
 public class DBContract {
-
+    public static class CoursesEntry implements BaseColumns{
+        public static final String tableName = "assignedCourses";
+        public static final String courseTitleColumn = "courseTitleColumn";
+        public static final String courseCodeColumn = "courseCodeColumn";
+        public static final String departmentIdColumn = "departmentIdColumn";
+        public static final String levelValueColumn = "levelValueColumn";
+    }
 }
