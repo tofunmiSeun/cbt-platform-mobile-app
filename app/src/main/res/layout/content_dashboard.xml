@@ -14,4 +14,8 @@
     tools:context="com.unilorin.vividmotion.pre_cbtapp.activities.DashboardActivity"
     tools:showIn="@layout/app_bar_dashboard">
 
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </RelativeLayout>
