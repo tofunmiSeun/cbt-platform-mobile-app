@@ -1,4 +1,4 @@
-package com.unilorin.vividmotion.pre_cbtapp.database;
+package com.unilorin.vividmotion.pre_cbtapp.managers.data;
 
 import android.content.ContentValues;
 import android.content.Context;

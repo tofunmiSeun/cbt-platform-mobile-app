@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.google.gson.Gson;
 import com.unilorin.vividmotion.pre_cbtapp.R;
-import com.unilorin.vividmotion.pre_cbtapp.database.DBContract;
 import com.unilorin.vividmotion.pre_cbtapp.managers.data.SharedPreferenceContract;
 import com.unilorin.vividmotion.pre_cbtapp.models.User;
 
