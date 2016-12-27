@@ -12,12 +12,14 @@ import android.view.MenuItem;
 
 import com.unilorin.vividmotion.pre_cbtapp.R;
 import com.unilorin.vividmotion.pre_cbtapp.fragments.AddCourseFragment;
+import com.unilorin.vividmotion.pre_cbtapp.fragments.CourseQuizFragment;
 import com.unilorin.vividmotion.pre_cbtapp.models.Course;
 
 public class DashboardActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, AddCourseFragment.OnCourseSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, AddCourseFragment.OnCourseSelectedListener, CourseQuizFragment.OnCourseQuizSelectedListener {
 
     private AddCourseFragment addCourseFragment;
+    private CourseQuizFragment courseQuizFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,10 +37,10 @@ public class DashboardActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        addCourseFragment = AddCourseFragment.newInstance(1);
+        courseQuizFragment = CourseQuizFragment.newInstance(1);
 
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, addCourseFragment)
+                .add(R.id.fragment_container, courseQuizFragment)
                 .commit();
     }
 
@@ -82,10 +84,21 @@ public class DashboardActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_profile) {
-            // Handle the camera action
+            // Handle the profile action
+        }
+        else if (id == R.id.nav_take_quiz){
+            courseQuizFragment = CourseQuizFragment.newInstance(1);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, courseQuizFragment)
+                    .addToBackStack(null)
+                    .commit();
         }
         else if (id == R.id.nav_add_course) {
-
+            addCourseFragment = AddCourseFragment.newInstance(1);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, addCourseFragment)
+                    .addToBackStack(null)
+                    .commit();
         }
         else if (id == R.id.nav_pdf_reader) {
 
@@ -94,6 +107,11 @@ public class DashboardActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onCourseQuizSelected(Course item) {
+
     }
 
     @Override
