@@ -5,10 +5,12 @@ package com.unilorin.vividmotion.pre_cbtapp.models;
  */
 
 public class Question {
+    private static final int NONE_SELECTED = -1;
     private Long id;
     private String question;
     private String[] options;
     private int correctAnswerIndex;
+    private int selectedAnswerIndex = NONE_SELECTED;
     private Long courseId;
 
     public Long getId() {
