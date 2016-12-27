@@ -9,4 +9,6 @@ public interface URLContract {
     String LOGIN_USER_URL = SERVER_URL + "/api/user/login";
     String GET_FACULTIES = SERVER_URL + "/api/student-profile/faculties";
     String GET_DEPARTMENTS = SERVER_URL + "/api/student-profile/departments/";
+    String GET_ALL_COURSES = SERVER_URL + "/api/courses/all-courses";
+    String UPDATE_USER_ASSIGNED_COURSES = SERVER_URL + "/api/courses/update-courses";
 }

@@ -12,12 +12,14 @@ import android.view.MenuItem;
 
 import com.unilorin.vividmotion.pre_cbtapp.R;
 import com.unilorin.vividmotion.pre_cbtapp.fragments.AddCourseFragment;
+import com.unilorin.vividmotion.pre_cbtapp.managers.data.CourseDBHelper;
 import com.unilorin.vividmotion.pre_cbtapp.models.Course;
+import com.unilorin.vividmotion.pre_cbtapp.network.services.HTTPCourseService;
 
 public class DashboardActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AddCourseFragment.OnCourseSelectedListener {
 
-    private AddCourseFragment addCourseFragment;
+    AddCourseFragment addCourseFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +36,6 @@ public class DashboardActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        addCourseFragment = AddCourseFragment.newInstance(1);
-
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container, addCourseFragment)
-                .commit();
     }
 
     @Override
@@ -81,10 +77,17 @@ public class DashboardActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_profile) {
+        if (id == R.id.nav_take_quiz) {
             // Handle the camera action
         }
         else if (id == R.id.nav_add_course) {
+            addCourseFragment = AddCourseFragment.newInstance(1);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, addCourseFragment)
+                    .commit();
+        }
+        else if (id == R.id.nav_profile) {
 
         }
         else if (id == R.id.nav_pdf_reader) {
@@ -97,7 +100,16 @@ public class DashboardActivity extends AppCompatActivity
     }
 
     @Override
-    public void onCourseSelected(Course item) {
-
+    public void onCourseSelected(final Course item) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                HTTPCourseService courseService = new HTTPCourseService(getApplicationContext());
+                boolean result = courseService.assignCourseToUser(item);
+                if (result) {
+                    addCourseFragment.onStart();
+                }
+            }
+        }).start();
     }
 }

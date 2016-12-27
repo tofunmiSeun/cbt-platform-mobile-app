@@ -5,18 +5,18 @@ package com.unilorin.vividmotion.pre_cbtapp.models;
  */
 
 public class Course {
-    private Long Id;
+    private Long id;
     private String courseTitle;
     private String courseCode;
     private Long departmentId;
     private Integer levelValue;
 
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getCourseTitle() {
