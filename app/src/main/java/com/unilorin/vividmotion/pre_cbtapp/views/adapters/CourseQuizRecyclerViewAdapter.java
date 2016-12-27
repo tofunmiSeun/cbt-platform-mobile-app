@@ -1,4 +1,4 @@
-package com.unilorin.vividmotion.pre_cbtapp.fragments;
+package com.unilorin.vividmotion.pre_cbtapp.views.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,24 +9,25 @@ import android.widget.TextView;
 import com.unilorin.vividmotion.pre_cbtapp.R;
 import com.unilorin.vividmotion.pre_cbtapp.models.Course;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static com.unilorin.vividmotion.pre_cbtapp.fragments.AddCourseFragment.OnCourseSelectedListener;
+import static com.unilorin.vividmotion.pre_cbtapp.fragments.CourseQuizFragment.OnCourseQuizSelectedListener;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnCourseSelectedListener}.
+ * specified {@link OnCourseQuizSelectedListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class AddCourseRecyclerViewAdapter extends RecyclerView.Adapter<AddCourseRecyclerViewAdapter.ViewHolder> {
+public class CourseQuizRecyclerViewAdapter extends RecyclerView.Adapter<CourseQuizRecyclerViewAdapter.ViewHolder> {
 
     private final List<Course> mValues;
-    private final List<Course> mValuesClone;
-    private final OnCourseSelectedListener mListener;
+    private final OnCourseQuizSelectedListener mListener;
+    private final List<Course> mValuesClone = new ArrayList<>();
 
-    public AddCourseRecyclerViewAdapter(List<Course> items, OnCourseSelectedListener listener) {
+    public CourseQuizRecyclerViewAdapter(List<Course> items, OnCourseQuizSelectedListener listener) {
         mValues = items;
-        mValuesClone = mValues;
+        mValuesClone.addAll(mValues);
         mListener = listener;
     }
 
@@ -51,15 +52,10 @@ public class AddCourseRecyclerViewAdapter extends RecyclerView.Adapter<AddCourse
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onCourseSelected(holder.mItem);
+                    mListener.onCourseQuizSelected(holder.mItem);
                 }
             }
         });
-    }
-
-    @Override
-    public int getItemCount() {
-        return mValues.size();
     }
 
     public void filter(String newText) {
@@ -75,6 +71,11 @@ public class AddCourseRecyclerViewAdapter extends RecyclerView.Adapter<AddCourse
             }
         }
         notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemCount() {
+        return mValues.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
