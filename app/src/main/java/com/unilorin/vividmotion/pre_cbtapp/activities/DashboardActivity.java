@@ -1,5 +1,6 @@
 package com.unilorin.vividmotion.pre_cbtapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -10,16 +11,20 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.gson.Gson;
 import com.unilorin.vividmotion.pre_cbtapp.R;
 import com.unilorin.vividmotion.pre_cbtapp.fragments.AddCourseFragment;
+import com.unilorin.vividmotion.pre_cbtapp.fragments.CourseQuizFragment;
 import com.unilorin.vividmotion.pre_cbtapp.managers.data.CourseDBHelper;
 import com.unilorin.vividmotion.pre_cbtapp.models.Course;
 import com.unilorin.vividmotion.pre_cbtapp.network.services.HTTPCourseService;
 
 public class DashboardActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, AddCourseFragment.OnCourseSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, AddCourseFragment.OnCourseSelectedListener,
+        CourseQuizFragment.OnCourseQuizSelectedListener {
 
-    AddCourseFragment addCourseFragment;
+    private AddCourseFragment addCourseFragment;
+    private CourseQuizFragment courseQuizFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +41,8 @@ public class DashboardActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        navigateMenu(R.id.nav_take_quiz);
     }
 
     @Override
@@ -77,14 +84,28 @@ public class DashboardActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        navigateMenu(id);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    public void navigateMenu(int id){
         if (id == R.id.nav_take_quiz) {
-            // Handle the camera action
+            setTitle("Take Test");
+            courseQuizFragment = CourseQuizFragment.newInstance(1);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, courseQuizFragment)
+                    .addToBackStack(null)
+                    .commit();
         }
         else if (id == R.id.nav_add_course) {
+            setTitle("Add Course");
             addCourseFragment = AddCourseFragment.newInstance(1);
-
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, addCourseFragment)
+                    .addToBackStack(null)
                     .commit();
         }
         else if (id == R.id.nav_profile) {
@@ -93,10 +114,13 @@ public class DashboardActivity extends AppCompatActivity
         else if (id == R.id.nav_pdf_reader) {
 
         }
+    }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+    @Override
+    public void onCourseQuizSelected(Course item) {
+        Intent takeQuizIntent = new Intent(DashboardActivity.this, TakeQuizActivity.class);
+        takeQuizIntent.putExtra("courseForQuiz", new Gson().toJson(item));
+        startActivity(takeQuizIntent);
     }
 
     @Override

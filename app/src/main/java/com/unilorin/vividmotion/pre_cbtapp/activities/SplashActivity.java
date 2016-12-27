@@ -27,15 +27,17 @@ public class SplashActivity extends AppCompatActivity {
                 SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferenceContract.FILE_NAME, MODE_PRIVATE);
                 User currentUser = new Gson().fromJson(sharedPreferences.getString(SharedPreferenceContract.USER_ACCOUNT_JSON_STRING, null), User.class);
 
-                if (currentUser == null){
-                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                }
-                else if (currentUser.getStudentProfile() == null){
-                    startActivity(new Intent(SplashActivity.this, SetupActivity.class));
-                }
-                else {
-                    startActivity(new Intent(SplashActivity.this, DashboardActivity.class));
-                }
+                startActivity(new Intent(SplashActivity.this, DashboardActivity.class));
+
+//                if (currentUser == null){
+//                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+//                }
+//                else if (currentUser.getStudentProfile() == null){
+//                    startActivity(new Intent(SplashActivity.this, SetupActivity.class));
+//                }
+//                else {
+//                    startActivity(new Intent(SplashActivity.this, DashboardActivity.class));
+//                }
                 finish();
             }
         }).start();

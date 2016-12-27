@@ -1,7 +1,6 @@
 package com.unilorin.vividmotion.pre_cbtapp.fragments;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -15,40 +14,46 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.unilorin.vividmotion.pre_cbtapp.R;
+import com.unilorin.vividmotion.pre_cbtapp.activities.DashboardActivity;
+import com.unilorin.vividmotion.pre_cbtapp.managers.data.CourseDBHelper;
 import com.unilorin.vividmotion.pre_cbtapp.models.Course;
-import com.unilorin.vividmotion.pre_cbtapp.network.services.HTTPCourseService;
-import com.unilorin.vividmotion.pre_cbtapp.views.adapters.AddCourseRecyclerViewAdapter;
+import com.unilorin.vividmotion.pre_cbtapp.views.adapters.CourseQuizRecyclerViewAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnCourseSelectedListener}
+ * Activities containing this fragment MUST implement the {@link OnCourseQuizSelectedListener}
  * interface.
  */
-public class AddCourseFragment extends Fragment implements SearchView.OnQueryTextListener {
+public class CourseQuizFragment extends Fragment implements SearchView.OnQueryTextListener, View.OnClickListener {
 
     private static final String ARG_COLUMN_COUNT = "column-count";
 
     private int mColumnCount = 1;
     private String mSearchTerm;
     private RecyclerView mRecyclerView;
-    private List<Course> mItems;
-    private AddCourseRecyclerViewAdapter mAdapter;
-    private OnCourseSelectedListener mListener;
+    private CourseQuizRecyclerViewAdapter mAdapter;
+    private OnCourseQuizSelectedListener mListener;
+    private Button mAddCourseButton;
+    private LinearLayout noCourseForQuizLayout;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public AddCourseFragment() {}
+    public CourseQuizFragment() {}
 
     @SuppressWarnings("unused")
-    public static AddCourseFragment newInstance(int columnCount) {
-        AddCourseFragment fragment = new AddCourseFragment();
+    public static CourseQuizFragment newInstance(int columnCount) {
+        CourseQuizFragment fragment = new CourseQuizFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -58,8 +63,8 @@ public class AddCourseFragment extends Fragment implements SearchView.OnQueryTex
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnCourseSelectedListener) {
-            mListener = (OnCourseSelectedListener) context;
+        if (context instanceof OnCourseQuizSelectedListener) {
+            mListener = (OnCourseQuizSelectedListener) context;
         }
         else {
             throw new RuntimeException(context.toString()
@@ -80,12 +85,13 @@ public class AddCourseFragment extends Fragment implements SearchView.OnQueryTex
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_course_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_course_quiz_list, container, false);
 
         // Set the adapter
-        if (view instanceof RecyclerView) {
+        if (view instanceof RelativeLayout) {
             Context context = view.getContext();
-            mRecyclerView = (RecyclerView) view;
+            mRecyclerView = (RecyclerView) view.findViewById(R.id.list);
+            noCourseForQuizLayout = (LinearLayout) view.findViewById(R.id.noAssignedCourseLayout);
             if (mColumnCount <= 1) {
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             }
@@ -99,7 +105,23 @@ public class AddCourseFragment extends Fragment implements SearchView.OnQueryTex
     @Override
     public void onStart(){
         super.onStart();
-        new LoadAvailableCoursesTask().execute();
+        if (getView() != null) {
+            mAddCourseButton = (Button) getView().findViewById(R.id.addCourseButton);
+            mAddCourseButton.setOnClickListener(this);
+        }
+
+        CourseDBHelper dbHelper = new CourseDBHelper(getActivity().getApplicationContext());
+        List<Course> coursesForUser = dbHelper.getAssignedCourses();
+        if (coursesForUser.size() > 0) {
+            mAdapter = new CourseQuizRecyclerViewAdapter(coursesForUser, mListener);
+            mRecyclerView.setAdapter(mAdapter);
+            mRecyclerView.setVisibility(View.VISIBLE);
+            noCourseForQuizLayout.setVisibility(View.GONE);
+
+        } else{
+            mRecyclerView.setVisibility(View.GONE);
+            noCourseForQuizLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -117,7 +139,7 @@ public class AddCourseFragment extends Fragment implements SearchView.OnQueryTex
      */
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.add_course_menu, menu);
+        inflater.inflate(R.menu.course_quiz_menu, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
@@ -159,6 +181,15 @@ public class AddCourseFragment extends Fragment implements SearchView.OnQueryTex
         return false;
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.addCourseButton:
+                ((DashboardActivity) getActivity()).navigateMenu(R.id.nav_add_course);
+                break;
+        }
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -169,32 +200,8 @@ public class AddCourseFragment extends Fragment implements SearchView.OnQueryTex
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnCourseSelectedListener {
+    public interface OnCourseQuizSelectedListener {
         // TODO: Update argument type and name
-        void onCourseSelected(Course item);
-    }
-
-    private class LoadAvailableCoursesTask extends AsyncTask<Void, Void, Void>{
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            HTTPCourseService courseService = new HTTPCourseService(getActivity().getApplicationContext());
-            mItems = courseService.getAvailableCourses();
-            return null;
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            if (mItems != null){
-                mAdapter = new AddCourseRecyclerViewAdapter(mItems, mListener);
-                mRecyclerView.setAdapter(mAdapter);
-            }
-        }
+        void onCourseQuizSelected(Course item);
     }
 }
