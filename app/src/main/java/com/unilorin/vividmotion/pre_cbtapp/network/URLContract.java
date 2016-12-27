@@ -11,4 +11,5 @@ public interface URLContract {
     String GET_DEPARTMENTS = SERVER_URL + "/api/student-profile/departments/";
     String GET_ALL_COURSES = SERVER_URL + "/api/courses/all-courses";
     String UPDATE_USER_ASSIGNED_COURSES = SERVER_URL + "/api/courses/update-courses";
+    String GET_TEST_QUESTION_FOR_COURSE = SERVER_URL + "/api/questions/";
 }
