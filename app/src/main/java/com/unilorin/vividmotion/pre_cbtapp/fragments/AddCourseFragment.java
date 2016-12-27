@@ -1,6 +1,7 @@
 package com.unilorin.vividmotion.pre_cbtapp.fragments;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
@@ -17,9 +18,9 @@ import android.view.ViewGroup;
 
 import com.unilorin.vividmotion.pre_cbtapp.R;
 import com.unilorin.vividmotion.pre_cbtapp.models.Course;
+import com.unilorin.vividmotion.pre_cbtapp.network.services.HTTPCourseService;
 import com.unilorin.vividmotion.pre_cbtapp.views.adapters.AddCourseRecyclerViewAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -30,13 +31,12 @@ import java.util.List;
  */
 public class AddCourseFragment extends Fragment implements SearchView.OnQueryTextListener {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
+
     private int mColumnCount = 1;
     private String mSearchTerm;
     private RecyclerView mRecyclerView;
-    private List<Course> mItems = new ArrayList<>();
+    private List<Course> mItems;
     private AddCourseRecyclerViewAdapter mAdapter;
     private OnCourseSelectedListener mListener;
 
@@ -44,10 +44,8 @@ public class AddCourseFragment extends Fragment implements SearchView.OnQueryTex
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public AddCourseFragment() {
-    }
+    public AddCourseFragment() {}
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static AddCourseFragment newInstance(int columnCount) {
         AddCourseFragment fragment = new AddCourseFragment();
@@ -72,8 +70,8 @@ public class AddCourseFragment extends Fragment implements SearchView.OnQueryTex
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setHasOptionsMenu(true);
+
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -87,19 +85,21 @@ public class AddCourseFragment extends Fragment implements SearchView.OnQueryTex
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            mRecyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             }
             else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-
-            mAdapter = new AddCourseRecyclerViewAdapter(mItems, mListener);
-            recyclerView.setAdapter(mAdapter);
-            mRecyclerView = recyclerView;
         }
         return view;
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        new LoadAvailableCoursesTask().execute();
     }
 
     /**
@@ -172,5 +172,29 @@ public class AddCourseFragment extends Fragment implements SearchView.OnQueryTex
     public interface OnCourseSelectedListener {
         // TODO: Update argument type and name
         void onCourseSelected(Course item);
+    }
+
+    private class LoadAvailableCoursesTask extends AsyncTask<Void, Void, Void>{
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            HTTPCourseService courseService = new HTTPCourseService(getActivity().getApplicationContext());
+            mItems = courseService.getAvailableCourses();
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (mItems != null){
+                mAdapter = new AddCourseRecyclerViewAdapter(mItems, mListener);
+                mRecyclerView.setAdapter(mAdapter);
+            }
+        }
     }
 }

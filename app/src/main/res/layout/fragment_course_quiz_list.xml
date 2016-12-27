@@ -18,7 +18,7 @@
         tools:listitem="@layout/fragment_course"/>
 
     <LinearLayout
-        android:id="@android:id/empty"
+        android:id="@+id/noAssignedCourseLayout"
         android:orientation="vertical"
         android:gravity="center"
         android:layout_width="match_parent"

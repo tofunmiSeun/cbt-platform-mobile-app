@@ -1,12 +1,18 @@
 package com.unilorin.vividmotion.pre_cbtapp.network.services;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.unilorin.vividmotion.pre_cbtapp.managers.data.CourseDBHelper;
+import com.unilorin.vividmotion.pre_cbtapp.managers.data.SharedPreferenceContract;
 import com.unilorin.vividmotion.pre_cbtapp.models.Course;
+import com.unilorin.vividmotion.pre_cbtapp.models.UpdateUserAssignedCoursesRequestObject;
+import com.unilorin.vividmotion.pre_cbtapp.models.User;
 import com.unilorin.vividmotion.pre_cbtapp.network.URLContract;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.HttpClientErrorException;
@@ -15,6 +21,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by Tofunmi on 26/12/2016.
@@ -35,9 +43,18 @@ public class HTTPCourseService {
 
     public List<Course> getAvailableCourses(){
         try {
-            String url = URLContract.SERVER_URL;
-            ResponseEntity<CourseResponseObject> responseEntity = restTemplate.getForEntity(url, CourseResponseObject.class);
-            return responseEntity.getBody().courses;
+            CourseResponseObject responseObject = restTemplate.getForObject(URLContract.GET_ALL_COURSES, CourseResponseObject.class);
+            CourseDBHelper courseDBHelper = new CourseDBHelper(appContext);
+            List<String> courseCodes = courseDBHelper.getCodesForAssignedCourses();
+
+            List<Course> filteredCourses = new ArrayList<>();
+            for(Course c  : responseObject.courses){
+                if (!courseCodes.contains(c.getCourseCode())){
+                    filteredCourses.add(c);
+                }
+            }
+
+            return filteredCourses;
         }
         catch (HttpClientErrorException clientErrorException) {
             Log.e(TAG, clientErrorException.getMessage());
@@ -51,12 +68,35 @@ public class HTTPCourseService {
         }
     }
 
-    public void assignCoursesToUser(List<Course> courses){
+    public boolean assignCoursesToUser(List<Course> courses){
         try {
+            SharedPreferences sharedPreferences = appContext.getSharedPreferences(SharedPreferenceContract.FILE_NAME, MODE_PRIVATE);
+            User currentUser = new Gson().fromJson(sharedPreferences.getString(SharedPreferenceContract.USER_ACCOUNT_JSON_STRING, null), User.class);
 
+            UpdateUserAssignedCoursesRequestObject requestObject = new UpdateUserAssignedCoursesRequestObject();
+            requestObject.emailAddress = currentUser.getEmailAddress();
+            requestObject.coursesToUpdate = courses;
+
+            ResponseEntity responseEntity = restTemplate.postForEntity(URLContract.UPDATE_USER_ASSIGNED_COURSES, requestObject, null);
+
+            if (responseEntity.getStatusCode() == HttpStatus.OK){
+                CourseDBHelper courseDBHelper = new CourseDBHelper(appContext);
+                for (Course c : courses) {
+                    courseDBHelper.registerNewCourse(c);
+                }
+            }
+
+            return true;
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
+            return false;
         }
+    }
+
+    public boolean assignCourseToUser(Course course){
+            List<Course> courseList = new ArrayList<>();
+            courseList.add(course);
+            return assignCoursesToUser(courseList);
     }
 
     private class CourseResponseObject {

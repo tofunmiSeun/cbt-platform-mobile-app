@@ -4,8 +4,8 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_take_quiz"
-            android:icon="@drawable/ic_add_circle_outline_black_24dp"
-            android:title="Take Quiz"/>
+            android:icon="@drawable/ic_assignment_black_24dp"
+            android:title="Take Test"/>
         <item
             android:id="@+id/nav_add_course"
             android:icon="@drawable/ic_add_circle_outline_black_24dp"

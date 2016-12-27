@@ -9,6 +9,7 @@ import android.provider.BaseColumns;
 public class DBContract {
     public interface CoursesEntry extends BaseColumns{
         String tableName = "assignedCourses";
+        String idColumn = "idColumn";
         String courseTitleColumn = "courseTitleColumn";
         String courseCodeColumn = "courseCodeColumn";
         String departmentIdColumn = "departmentIdColumn";

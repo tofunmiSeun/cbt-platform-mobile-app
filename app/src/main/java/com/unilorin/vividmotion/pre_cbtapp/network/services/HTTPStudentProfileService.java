@@ -50,7 +50,7 @@ public class HTTPStudentProfileService {
             String url = URLContract.SERVER_URL + "/api/user/" + currentUser.getEmailAddress() + "/enrich-student";
             ResponseEntity responseEntity = restTemplate.postForEntity(url, studentProfile, null);
 
-            if (responseEntity.getStatusCode() == HttpStatus.ACCEPTED){
+            if (responseEntity.getStatusCode() == HttpStatus.OK){
                 currentUser.setStudentProfile(studentProfile);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString(SharedPreferenceContract.USER_ACCOUNT_JSON_STRING, new Gson().toJson(currentUser));
