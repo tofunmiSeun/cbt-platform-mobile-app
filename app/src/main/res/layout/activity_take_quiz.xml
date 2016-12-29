@@ -22,7 +22,26 @@
 
     </android.support.design.widget.AppBarLayout>-->
 
-    <include layout="@layout/content_take_quiz"/>
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="10sp"
+        style="@android:style/Theme.Translucent">
+
+        <TextView
+            android:text="30:00"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/timerTextView"
+            android:padding="10sp"
+            android:textColor="@color/colorAccent"
+            android:textStyle="normal|bold" />
+
+    </android.support.v7.widget.CardView>
+
+    <include layout="@layout/content_take_quiz"
+        android:layout_height="452dp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
