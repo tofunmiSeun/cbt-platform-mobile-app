@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content" android:layout_height="wrap_content">
+
+    <TextView
+        android:text="TEST SUMMARY"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20sp"
+        android:textColor="@android:color/background_dark"
+        android:textSize="16sp" />
+
+    <TextView
+        android:text="Course:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView2"
+        android:layout_alignStart="@+id/correctAnswersLabelTextView"
+        android:id="@+id/courseLabelTextView"
+        android:layout_marginTop="15sp" />
+
+    <TextView
+        android:text="SSG501"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/courseLabelTextView"
+        android:layout_alignStart="@+id/totalQuestionsTextView"
+        android:id="@+id/courseTextView"
+        android:textColor="@android:color/background_dark" />
+
+    <TextView
+        android:text="Total Questions:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/courseLabelTextView"
+        android:layout_marginStart="20sp"
+        android:id="@+id/totalQuestionsLabelTextView"
+        android:layout_marginTop="15sp" />
+
+    <TextView
+        android:text="40"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/totalQuestionsLabelTextView"
+        android:layout_toEndOf="@+id/totalQuestionsLabelTextView"
+        android:id="@+id/totalQuestionsTextView"
+        android:layout_marginLeft="50sp"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:text="Questions Answered:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/totalQuestionsLabelTextView"
+        android:layout_alignStart="@+id/totalQuestionsLabelTextView"
+        android:layout_marginTop="15sp"
+        android:id="@+id/questionsAnsweredLabelTextView" />
+
+    <TextView
+        android:text="36"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/questionsAnsweredLabelTextView"
+        android:layout_alignStart="@+id/totalQuestionsTextView"
+        android:id="@+id/questionsAnsweredTextView"
+        android:textColor="@color/colorAccent" />
+
+    <TextView
+        android:text="Correct Answer:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/questionsAnsweredLabelTextView"
+        android:layout_alignStart="@+id/questionsAnsweredLabelTextView"
+        android:layout_marginTop="15sp"
+        android:id="@+id/correctAnswersLabelTextView" />
+
+    <TextView
+        android:text="29"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/correctAnswersLabelTextView"
+        android:layout_alignStart="@+id/questionsAnsweredTextView"
+        android:id="@+id/correctAnswersTextView"
+        android:textColor="@color/colorCorrectAnswer" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="false"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60sp"
+        android:layout_below="@+id/correctAnswersLabelTextView">
+
+        <Button
+            android:text="CLOSE"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/closeDialogButton"
+            android:layout_weight="1"
+            style="@style/Widget.AppCompat.Button.Borderless" />
+
+        <Button
+            android:text="FINISH"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/finishTestButton"
+            android:layout_weight="1"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored" />
+    </LinearLayout>
+
+</RelativeLayout>

@@ -5,7 +5,7 @@ package com.unilorin.vividmotion.pre_cbtapp.models;
  */
 
 public class Question {
-    private static final int NONE_SELECTED = -1;
+    public static final int NONE_SELECTED = -1;
     private Long id;
     private String question;
     private String[] options;
@@ -43,6 +43,14 @@ public class Question {
 
     public void setCorrectAnswerIndex(int correctAnswerIndex) {
         this.correctAnswerIndex = correctAnswerIndex;
+    }
+
+    public int getSelectedAnswerIndex() {
+        return selectedAnswerIndex;
+    }
+
+    public void setSelectedAnswerIndex(int selectedAnswerIndex) {
+        this.selectedAnswerIndex = selectedAnswerIndex;
     }
 
     public Long getCourseId() {
