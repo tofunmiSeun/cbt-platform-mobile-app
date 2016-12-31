@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.unilorin.vividmotion.pre_cbtapp.R;
 import com.unilorin.vividmotion.pre_cbtapp.fragments.AddCourseFragment;
 import com.unilorin.vividmotion.pre_cbtapp.fragments.CourseQuizFragment;
+import com.unilorin.vividmotion.pre_cbtapp.fragments.UserProfileFragment;
 import com.unilorin.vividmotion.pre_cbtapp.managers.data.CourseDBHelper;
 import com.unilorin.vividmotion.pre_cbtapp.managers.data.SharedPreferenceContract;
 import com.unilorin.vividmotion.pre_cbtapp.models.Course;
@@ -33,6 +34,7 @@ public class DashboardActivity extends AppCompatActivity
 
     private AddCourseFragment addCourseFragment;
     private CourseQuizFragment courseQuizFragment;
+    private UserProfileFragment userProfileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,7 +129,12 @@ public class DashboardActivity extends AppCompatActivity
                     .commit();
         }
         else if (id == R.id.nav_profile) {
-
+            setTitle("My Profile");
+            userProfileFragment = new UserProfileFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, userProfileFragment)
+                    .addToBackStack(null)
+                    .commit();
         }
         else if (id == R.id.nav_pdf_reader) {
 
