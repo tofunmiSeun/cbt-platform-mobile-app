@@ -7,6 +7,7 @@ public interface URLContract {
     String SERVER_URL = "http://192.168.43.104:9000";
     String REGISTER_USER_URL = SERVER_URL + "/api/user/register";
     String LOGIN_USER_URL = SERVER_URL + "/api/user/login";
+    String LOGOUT_USER_URL = SERVER_URL + "/api/user/logout/";
     String GET_FACULTIES = SERVER_URL + "/api/student-profile/faculties";
     String GET_DEPARTMENTS = SERVER_URL + "/api/student-profile/departments/";
     String GET_ALL_COURSES = SERVER_URL + "/api/courses/all-courses";

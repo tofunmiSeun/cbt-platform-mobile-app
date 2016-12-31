@@ -18,4 +18,9 @@ public class MockUserAccountService implements UserAccountService {
     public LoginResponseStatus loginUser(String emailAddress, String password) {
         return LoginResponseStatus.ACCEPTED;
     }
+
+    @Override
+    public boolean signOutUser() {
+        return false;
+    }
 }

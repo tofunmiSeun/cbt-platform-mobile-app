@@ -11,6 +11,7 @@ import com.unilorin.vividmotion.pre_cbtapp.models.SignUpResponseStatus;
 import com.unilorin.vividmotion.pre_cbtapp.models.User;
 import com.unilorin.vividmotion.pre_cbtapp.network.URLContract;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.HttpClientErrorException;
@@ -113,6 +114,26 @@ public class HTTPUserAccountService implements UserAccountService {
             Log.e(TAG, e.getMessage());
             return LoginResponseStatus.UNKNOWN_ERROR;
         }
+    }
+
+    @Override
+    public boolean signOutUser() {
+        SharedPreferences sharedPreferences = appContext.getSharedPreferences(SharedPreferenceContract.FILE_NAME, MODE_PRIVATE);
+        String userJson = sharedPreferences.getString(SharedPreferenceContract.USER_ACCOUNT_JSON_STRING, null);
+        User currentUser = new Gson().fromJson(userJson, User.class);
+
+        try {
+            restTemplate.postForEntity(URLContract.LOGOUT_USER_URL + currentUser.getEmailAddress(), null, null);
+        }
+        catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.remove(SharedPreferenceContract.USER_ACCOUNT_JSON_STRING);
+        editor.apply();
+        return true;
     }
 
     private class UserLoginResponseObject {

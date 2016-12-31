@@ -10,4 +10,5 @@ import com.unilorin.vividmotion.pre_cbtapp.models.User;
 public interface UserAccountService {
     SignUpResponseStatus registerNewUser(User user);
     LoginResponseStatus loginUser(String emailAddress, String password);
+    boolean signOutUser();
 }

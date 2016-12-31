@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView"
+        android:layout_below="@+id/trendTextView"
         android:layout_marginTop="80sp">
 
         <EditText
@@ -79,7 +79,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="15sp"
             android:layout_weight="1"
-            android:text="REGISTER"/>
+            android:text="Register"
+            android:textStyle="normal|bold" />
 
     </LinearLayout>
 

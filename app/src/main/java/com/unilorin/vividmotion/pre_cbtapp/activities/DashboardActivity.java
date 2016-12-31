@@ -1,6 +1,9 @@
 package com.unilorin.vividmotion.pre_cbtapp.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -10,14 +13,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.unilorin.vividmotion.pre_cbtapp.R;
 import com.unilorin.vividmotion.pre_cbtapp.fragments.AddCourseFragment;
 import com.unilorin.vividmotion.pre_cbtapp.fragments.CourseQuizFragment;
 import com.unilorin.vividmotion.pre_cbtapp.managers.data.CourseDBHelper;
+import com.unilorin.vividmotion.pre_cbtapp.managers.data.SharedPreferenceContract;
 import com.unilorin.vividmotion.pre_cbtapp.models.Course;
+import com.unilorin.vividmotion.pre_cbtapp.models.User;
 import com.unilorin.vividmotion.pre_cbtapp.network.services.HTTPCourseService;
+import com.unilorin.vividmotion.pre_cbtapp.network.services.HTTPUserAccountService;
 
 public class DashboardActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AddCourseFragment.OnCourseSelectedListener,
@@ -71,7 +79,17 @@ public class DashboardActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_refresh) {
+            return true;
+        }
+        else if(id == R.id.action_settings){
+            return true;
+        }
+        else if(id == R.id.action_feedback){
+            return true;
+        }
+        else if(id == R.id.action_logout){
+            new LogOutTask().execute();
             return true;
         }
 
@@ -135,5 +153,40 @@ public class DashboardActivity extends AppCompatActivity
                 }
             }
         }).start();
+    }
+
+    private class LogOutTask extends AsyncTask<Void, Void, Void>{
+        boolean logoutSuccessful;
+        ProgressDialog prog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            prog = new ProgressDialog(DashboardActivity.this);
+            prog.setMessage("Logging out");
+            prog.setCancelable(false);
+            prog.setIndeterminate(true);
+            prog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            prog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            logoutSuccessful = new HTTPUserAccountService(getApplicationContext()).signOutUser();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            prog.dismiss();
+            if (logoutSuccessful){
+                Toast.makeText(getBaseContext(), "logout successful!", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
+            }else{
+                Toast.makeText(getBaseContext(), "logout unsuccessful!", Toast.LENGTH_SHORT).show();
+            }
+
+        }
     }
 }
