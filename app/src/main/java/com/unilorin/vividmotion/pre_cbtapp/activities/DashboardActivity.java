@@ -29,12 +29,9 @@ import com.unilorin.vividmotion.pre_cbtapp.network.services.HTTPCourseService;
 import com.unilorin.vividmotion.pre_cbtapp.network.services.HTTPUserAccountService;
 
 public class DashboardActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, AddCourseFragment.OnCourseSelectedListener,
-        CourseQuizFragment.OnCourseQuizSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, CourseQuizFragment.OnCourseQuizSelectedListener {
 
-    private AddCourseFragment addCourseFragment;
-    private CourseQuizFragment courseQuizFragment;
-    private UserProfileFragment userProfileFragment;
+    User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +39,11 @@ public class DashboardActivity extends AppCompatActivity
         setContentView(R.layout.activity_dashboard);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferenceContract.FILE_NAME, MODE_PRIVATE);
+        currentUser = new Gson().fromJson(sharedPreferences.getString(SharedPreferenceContract.USER_ACCOUNT_JSON_STRING, null), User.class);
+
+        setTitle(currentUser.getName());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -52,7 +54,15 @@ public class DashboardActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        navigateMenu(R.id.nav_take_quiz);
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.userNameTextView)).setText(currentUser.getName());
+        ((TextView) navigationView.getHeaderView(0).findViewById(R.id.trendTextView)).setText("On a streak.");
+
+
+        CourseQuizFragment courseQuizFragment = CourseQuizFragment.newInstance(1);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, courseQuizFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
@@ -112,29 +122,11 @@ public class DashboardActivity extends AppCompatActivity
     }
 
     public void navigateMenu(int id){
-        if (id == R.id.nav_take_quiz) {
-            setTitle("Take Test");
-            courseQuizFragment = CourseQuizFragment.newInstance(1);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, courseQuizFragment)
-                    .addToBackStack(null)
-                    .commit();
-        }
-        else if (id == R.id.nav_add_course) {
-            setTitle("Add Course");
-            addCourseFragment = AddCourseFragment.newInstance(1);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, addCourseFragment)
-                    .addToBackStack(null)
-                    .commit();
+        if (id == R.id.nav_add_course) {
+            startActivity(new Intent(getBaseContext(), AddCourseActivity.class));
         }
         else if (id == R.id.nav_profile) {
-            setTitle("My Profile");
-            userProfileFragment = new UserProfileFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, userProfileFragment)
-                    .addToBackStack(null)
-                    .commit();
+            startActivity(new Intent(getBaseContext(), UserProfileActivity.class));
         }
         else if (id == R.id.nav_pdf_reader) {
 
@@ -146,20 +138,6 @@ public class DashboardActivity extends AppCompatActivity
         Intent takeQuizIntent = new Intent(DashboardActivity.this, TakeQuizActivity.class);
         takeQuizIntent.putExtra("courseForQuiz", new Gson().toJson(item));
         startActivity(takeQuizIntent);
-    }
-
-    @Override
-    public void onCourseSelected(final Course item) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                HTTPCourseService courseService = new HTTPCourseService(getApplicationContext());
-                boolean result = courseService.assignCourseToUser(item);
-                if (result) {
-                    addCourseFragment.onStart();
-                }
-            }
-        }).start();
     }
 
     private class LogOutTask extends AsyncTask<Void, Void, Void>{

@@ -34,7 +34,7 @@ public class CourseQuizRecyclerViewAdapter extends RecyclerView.Adapter<CourseQu
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_course, parent, false);
+                .inflate(R.layout.take_quiz_courses_list_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -42,9 +42,7 @@ public class CourseQuizRecyclerViewAdapter extends RecyclerView.Adapter<CourseQu
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mCourseCodeView.setText(holder.mItem.getCourseCode());
-        holder.mCourseTitleView.setText(holder.mItem.getCourseTitle());
-//        holder.mIdView.setText(mValues.get(position).id);
-//        holder.mContentView.setText(mValues.get(position).content);
+        //holder.mCourseTitleView.setText(holder.mItem.getCourseTitle());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,19 +79,19 @@ public class CourseQuizRecyclerViewAdapter extends RecyclerView.Adapter<CourseQu
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mCourseCodeView;
-        public final TextView mCourseTitleView;
+        //public final TextView mCourseTitleView;
         public Course mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mCourseCodeView = (TextView) view.findViewById(R.id.courseCodeTextView);
-            mCourseTitleView = (TextView) view.findViewById(R.id.courseTitleTextView);
+        //    mCourseTitleView = (TextView) view.findViewById(R.id.courseTitleTextView);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mCourseTitleView.getText() + "'";
+            return super.toString() + " '" + mCourseCodeView.getText() + "'";
         }
     }
 }

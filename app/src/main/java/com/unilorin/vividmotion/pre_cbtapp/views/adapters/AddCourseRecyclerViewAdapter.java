@@ -34,7 +34,7 @@ public class AddCourseRecyclerViewAdapter extends RecyclerView.Adapter<AddCourse
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_course, parent, false);
+                .inflate(R.layout.add_course_list_item, parent, false);
         return new ViewHolder(view);
     }
 

@@ -11,4 +11,4 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="com.unilorin.vividmotion.pre_cbtapp.fragments.AddCourseFragment"
-    tools:listitem="@layout/fragment_course"/>
+    tools:listitem="@layout/add_course_list_item"/>
