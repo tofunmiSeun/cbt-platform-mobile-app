@@ -15,4 +15,12 @@ public class DBContract {
         String departmentIdColumn = "departmentIdColumn";
         String levelValueColumn = "levelValueColumn";
     }
+    public interface QuestionEntry extends BaseColumns{
+        String tableName = "question";
+        String idColumn = "idColumn";
+        String questionColumn = "questionColumn";
+        String optionsColumn = "optionsColumn";
+        String correctAnswerIndexColumn = "correctAnswerIndexColumn";
+        String courseIdColumn = "courseIdColumn";
+    }
 }
