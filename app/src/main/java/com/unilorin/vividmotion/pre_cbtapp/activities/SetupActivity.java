@@ -165,12 +165,15 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
         @Override
         protected void onPreExecute() {
-            prog = new ProgressDialog(SetupActivity.this, R.style.alertDialog);
-            prog.setMessage("Setting up profile...");
-            prog.setCancelable(false);
-            prog.setIndeterminate(true);
-            prog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            prog.show();
+            if (taskTag == TASK_SAVE_STUDENT_PROFILE){
+                prog = new ProgressDialog(SetupActivity.this, R.style.alertDialog);
+                prog.setMessage("Setting up profile...");
+                prog.setCancelable(false);
+                prog.setIndeterminate(true);
+                prog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                prog.show();
+            }
+
             super.onPreExecute();
         }
 
@@ -198,7 +201,10 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            prog.dismiss();
+            if (prog != null){
+                prog.dismiss();
+            }
+
             switch (taskTag) {
                 case TASK_GET_FACULTIES:
                     setUpFacultySelectBox(faculties);
@@ -208,6 +214,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                     break;
                 case TASK_SAVE_STUDENT_PROFILE:
                     if (result) {
+                        //overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                         startActivity(new Intent(SetupActivity.this, DashboardActivity.class));
                         finish();
                     } else {
