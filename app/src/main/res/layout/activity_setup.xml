@@ -11,72 +11,90 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.unilorin.vividmotion.pre_cbtapp.activities.SetupActivity">
 
-
     <TextView
-        android:id="@+id/facultyTextView"
+        android:text="Setup your student profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        android:text="Faculty"
-        android:textColor="@android:color/black"/>
+        android:id="@+id/messageTextView"
+        android:layout_above="@+id/mainRelativeLayout"
+        android:layout_centerHorizontal="true"
+        android:textSize="20sp"
+        android:textStyle="normal|bold"
+        android:layout_marginBottom="20sp" />
 
-
-    <android.support.v7.widget.AppCompatSpinner
-        android:id="@+id/facultySpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/facultyTextView"
-        />
-
-
-    <TextView
-        android:id="@+id/departmentTextView"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/facultySpinner"
-        android:layout_marginTop="15sp"
-        android:text="Department"
-        android:textColor="@android:color/black"/>
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/mainRelativeLayout"
+        android:paddingTop="60sp">
+
+        <TextView
+            android:id="@+id/facultyTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Faculty"
+            android:textColor="@android:color/black"/>
 
 
-    <android.support.v7.widget.AppCompatSpinner
-        android:id="@+id/departmentSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/departmentTextView"
-        android:layout_marginTop="10dp"/>
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/facultySpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/facultyTextView"
+            />
 
-    <TextView
-        android:id="@+id/levelTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/departmentSpinner"
-        android:layout_marginTop="15sp"
-        android:text="Level"
-        android:textColor="@android:color/black"/>
 
-    <android.support.v7.widget.AppCompatSpinner
-        android:id="@+id/levelSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/levelTextView"
-        android:layout_marginTop="10dp"/>
+        <TextView
+            android:id="@+id/departmentTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/facultySpinner"
+            android:layout_marginTop="15sp"
+            android:text="Department"
+            android:textColor="@android:color/black"/>
 
-    <Button
 
-        android:id="@+id/continueButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@+id/levelSpinner"
-        android:layout_marginEnd="10dp"
-        android:layout_marginTop="30dp"
-        android:text="CONTINUE"
-        android:textColor="#4a4a4a"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        style="@style/Widget.AppCompat.Button.Borderless" />
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/departmentSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/departmentTextView"
+            android:layout_marginTop="10dp"/>
+
+        <TextView
+            android:id="@+id/levelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/departmentSpinner"
+            android:layout_marginTop="15sp"
+            android:text="Level"
+            android:textColor="@android:color/black"/>
+
+        <android.support.v7.widget.AppCompatSpinner
+            android:id="@+id/levelSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/levelTextView"
+            android:layout_marginTop="10dp"/>
+
+        <Button
+
+            android:id="@+id/continueButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/levelSpinner"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="30dp"
+            android:text="CONTINUE"
+            android:textColor="#4a4a4a"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            style="@style/Widget.AppCompat.Button.Borderless" />
+    </RelativeLayout>
 </RelativeLayout>

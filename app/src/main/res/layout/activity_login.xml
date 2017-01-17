@@ -12,52 +12,70 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.unilorin.vividmotion.pre_cbtapp.activities.LoginActivity">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/emailAddressInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/trendTextView"
-        android:layout_marginTop="80sp">
-
-        <EditText
-            android:id="@+id/emailAddressEditText"
-            android:layout_width="match_parent"
-            android:inputType="textEmailAddress"
-            android:layout_height="wrap_content"
-            android:hint="Email Address"/>
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/passwordInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/emailAddressInputLayout"
-        android:layout_alignParentStart="false"
-        android:layout_alignEnd="@+id/emailAddressInputLayout"
-        android:layout_below="@+id/emailAddressInputLayout"
-        android:layout_marginTop="20sp">
-
-        <EditText
-            android:id="@+id/passwordEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Password"
-            android:inputType="textPassword"/>
-    </android.support.design.widget.TextInputLayout>
-
-    <Button
-        android:id="@+id/signInButton"
+    <TextView
+        android:text="Your trusted CBT platform"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/passwordInputLayout"
-        android:layout_marginTop="30dp"
-        android:textStyle="bold"
-        android:layout_marginEnd="10dp"
-        android:textSize="16sp"
-        android:layout_alignParentEnd="true"
-        android:text="SIGN IN"
-        style="@style/Base.Widget.AppCompat.Button.Borderless" />
+        android:id="@+id/messageTextView"
+        android:layout_above="@+id/mainRelativeLayout"
+        android:layout_centerHorizontal="true"
+        android:textSize="20sp"
+        android:textStyle="normal|bold"
+        android:layout_marginBottom="40sp" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:id="@+id/mainRelativeLayout"
+        android:paddingTop="40sp">
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/emailAddressInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/trendTextView">
+
+            <EditText
+                android:id="@+id/emailAddressEditText"
+                android:layout_width="match_parent"
+                android:inputType="textEmailAddress"
+                android:layout_height="wrap_content"
+                android:hint="Email Address"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/passwordInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/emailAddressInputLayout"
+            android:layout_alignParentStart="false"
+            android:layout_alignEnd="@+id/emailAddressInputLayout"
+            android:layout_below="@+id/emailAddressInputLayout"
+            android:layout_marginTop="20sp">
+
+            <EditText
+                android:id="@+id/passwordEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Password"
+                android:inputType="textPassword"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/signInButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/passwordInputLayout"
+            android:layout_marginTop="30dp"
+            android:textStyle="bold"
+            android:layout_marginEnd="10dp"
+            android:textSize="16sp"
+            android:layout_alignParentEnd="true"
+            android:text="SIGN IN"
+            style="@style/Base.Widget.AppCompat.Button.Borderless" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
