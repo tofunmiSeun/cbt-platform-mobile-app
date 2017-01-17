@@ -5,13 +5,19 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.unilorin.vividmotion.pre_cbtapp.managers.data.CourseDBHelper;
+import com.unilorin.vividmotion.pre_cbtapp.managers.data.QuestionDBHelper;
 import com.unilorin.vividmotion.pre_cbtapp.managers.data.SharedPreferenceContract;
+import com.unilorin.vividmotion.pre_cbtapp.managers.data.TestResultDBHelper;
+import com.unilorin.vividmotion.pre_cbtapp.models.Course;
 import com.unilorin.vividmotion.pre_cbtapp.models.LoginResponseStatus;
+import com.unilorin.vividmotion.pre_cbtapp.models.Question;
+import com.unilorin.vividmotion.pre_cbtapp.models.SignOutUserRequestObject;
 import com.unilorin.vividmotion.pre_cbtapp.models.SignUpResponseStatus;
 import com.unilorin.vividmotion.pre_cbtapp.models.User;
 import com.unilorin.vividmotion.pre_cbtapp.network.URLContract;
+import com.unilorin.vividmotion.pre_cbtapp.utils.AttemptedQuestionsUtils;
 
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.web.client.HttpClientErrorException;
@@ -19,6 +25,7 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -93,6 +100,16 @@ public class HTTPUserAccountService implements UserAccountService {
                     editor.putString(SharedPreferenceContract.USER_ACCOUNT_JSON_STRING, new Gson().toJson(userLoginResponseObject.user));
                     editor.apply();
 
+                    if (userLoginResponseObject.registeredCourses != null){
+                        CourseDBHelper courseDBHelper = new CourseDBHelper(appContext);
+                        courseDBHelper.registerNewCourses(userLoginResponseObject.registeredCourses);
+                    }
+
+                    if (userLoginResponseObject.questions != null) {
+                        QuestionDBHelper questionDBHelper = new QuestionDBHelper(appContext);
+                        questionDBHelper.saveQuestions(userLoginResponseObject.questions);
+                    }
+
                     return LoginResponseStatus.ACCEPTED;
 
                 case UserLoginResponseObject.INCORRECT_PASSWORD:
@@ -118,21 +135,38 @@ public class HTTPUserAccountService implements UserAccountService {
 
     @Override
     public boolean signOutUser() {
+        CourseDBHelper courseDBHelper = new CourseDBHelper(appContext);
+        QuestionDBHelper questionDBHelper = new QuestionDBHelper(appContext);
+        TestResultDBHelper testResultDBHelper = new TestResultDBHelper(appContext);
+        AttemptedQuestionsUtils attemptedQuestionsUtils = new AttemptedQuestionsUtils(appContext);
+
         SharedPreferences sharedPreferences = appContext.getSharedPreferences(SharedPreferenceContract.FILE_NAME, MODE_PRIVATE);
         String userJson = sharedPreferences.getString(SharedPreferenceContract.USER_ACCOUNT_JSON_STRING, null);
         User currentUser = new Gson().fromJson(userJson, User.class);
 
+        SignOutUserRequestObject requestObject = new SignOutUserRequestObject();
+        requestObject.emailAddress = currentUser.getEmailAddress();
+        requestObject.testResultsPendingUpload = testResultDBHelper.getTestResultsPendingUpload();
+        requestObject.attemptedQuestionsIds = attemptedQuestionsUtils.getIdsOfAttemptedQuestions();
+
         try {
-            restTemplate.postForEntity(URLContract.LOGOUT_USER_URL + currentUser.getEmailAddress(), null, null);
+            restTemplate.postForEntity(URLContract.LOGOUT_USER_URL, requestObject, null);
         }
         catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
 
+        // Delete test results and course and questions and attempted questions list
         SharedPreferences.Editor editor = sharedPreferences.edit();
-
         editor.remove(SharedPreferenceContract.USER_ACCOUNT_JSON_STRING);
         editor.apply();
+
+        courseDBHelper.emptyDatabase();
+        questionDBHelper.emptyDatabase();
+        testResultDBHelper.emptyDatabase();
+        attemptedQuestionsUtils.deleteAttemptedQuestionsList();
+
+        new AttemptedQuestionsUtils(appContext).deleteAttemptedQuestionsList();
         return true;
     }
 
@@ -144,6 +178,8 @@ public class HTTPUserAccountService implements UserAccountService {
 
         private int status;
         private User user;
+        private List<Course> registeredCourses;
+        private List<Question> questions;
     }
 
     private class UserSignUpResponseObject {

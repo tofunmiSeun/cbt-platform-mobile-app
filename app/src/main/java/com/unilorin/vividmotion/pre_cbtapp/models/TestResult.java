@@ -1,8 +1,5 @@
 package com.unilorin.vividmotion.pre_cbtapp.models;
 
-import java.util.Date;
-import java.util.List;
-
 /**
  * Created by Tofunmi on 29/12/2016.
  */
@@ -13,13 +10,11 @@ public class TestResult {
     private Long userId;
     private Long courseId;
 
-    private List<Long> questionsId;
+    private Integer totalQuestionsCount;
+    private Integer questionsAnsweredCount;
+    private Integer correctAnswerCount;
 
-    private int totalQuestionsCount;
-    private int questionsAnsweredCount;
-    private int correctAnswersCount;
-
-    private Date timeOfTest;
+    private Long timeOfTestInMilliseconds;
 
     public Long getId() {
         return id;
@@ -45,43 +40,35 @@ public class TestResult {
         this.courseId = courseId;
     }
 
-    public List<Long> getQuestionsId() {
-        return questionsId;
-    }
-
-    public void setQuestionsId(List<Long> questionsId) {
-        this.questionsId = questionsId;
-    }
-
-    public int getTotalQuestionsCount() {
+    public Integer getTotalQuestionsCount() {
         return totalQuestionsCount;
     }
 
-    public void setTotalQuestionsCount(int totalQuestionsCount) {
+    public void setTotalQuestionsCount(Integer totalQuestionsCount) {
         this.totalQuestionsCount = totalQuestionsCount;
     }
 
-    public int getQuestionsAnsweredCount() {
+    public Integer getQuestionsAnsweredCount() {
         return questionsAnsweredCount;
     }
 
-    public void setQuestionsAnsweredCount(int questionsAnsweredCount) {
+    public void setQuestionsAnsweredCount(Integer questionsAnsweredCount) {
         this.questionsAnsweredCount = questionsAnsweredCount;
     }
 
-    public int getCorrectAnswersCount() {
-        return correctAnswersCount;
+    public Integer getCorrectAnswerCount() {
+        return correctAnswerCount;
     }
 
-    public void setCorrectAnswersCount(int correctAnswersCount) {
-        this.correctAnswersCount = correctAnswersCount;
+    public void setCorrectAnswerCount(Integer correctAnswerCount) {
+        this.correctAnswerCount = correctAnswerCount;
     }
 
-    public Date getTimeOfTest() {
-        return timeOfTest;
+    public Long getTimeOfTestInMilliseconds() {
+        return timeOfTestInMilliseconds;
     }
 
-    public void setTimeOfTest(Date timeOfTest) {
-        this.timeOfTest = timeOfTest;
+    public void setTimeOfTestInMilliseconds(Long timeOfTestInMilliseconds) {
+        this.timeOfTestInMilliseconds = timeOfTestInMilliseconds;
     }
 }

@@ -1,11 +1,16 @@
 package com.unilorin.vividmotion.pre_cbtapp.activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -26,12 +31,15 @@ import com.unilorin.vividmotion.pre_cbtapp.managers.data.SharedPreferenceContrac
 import com.unilorin.vividmotion.pre_cbtapp.models.Course;
 import com.unilorin.vividmotion.pre_cbtapp.models.User;
 import com.unilorin.vividmotion.pre_cbtapp.network.services.HTTPCourseService;
+import com.unilorin.vividmotion.pre_cbtapp.network.services.HTTPTestService;
 import com.unilorin.vividmotion.pre_cbtapp.network.services.HTTPUserAccountService;
+import com.unilorin.vividmotion.pre_cbtapp.services.DownloadQuestionService;
+import com.unilorin.vividmotion.pre_cbtapp.services.UploadTestResultService;
 
 public class DashboardActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, CourseQuizFragment.OnCourseQuizSelectedListener {
 
-    User currentUser;
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +67,44 @@ public class DashboardActivity extends AppCompatActivity
 
 
         CourseQuizFragment courseQuizFragment = CourseQuizFragment.newInstance(1);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, courseQuizFragment)
-                .addToBackStack(null)
-                .commit();
+        FragmentManager fm = getSupportFragmentManager();
+        fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+        fm.beginTransaction().replace(R.id.fragment_container, courseQuizFragment).commit();
+
+        if (!sharedPreferences.contains(SharedPreferenceContract.SRRVICES_STARTED)){
+            tryAndStartServices();
+
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(SharedPreferenceContract.SRRVICES_STARTED, true);
+            editor.apply();
+        }
+
+    }
+
+    private void tryAndStartServices(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                long nextScheduledTime = System.currentTimeMillis() + (1000 * 3600 * 24);
+
+                Intent uploadResultIntent = new Intent(DashboardActivity.this, UploadTestResultService.class);
+                PendingIntent uploadResultPendingIntent =
+                        PendingIntent.getBroadcast(DashboardActivity.this, 0, uploadResultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+                alarmManager.set(AlarmManager.RTC, nextScheduledTime, uploadResultPendingIntent);
+
+
+                Intent downloadQuestionsIntent = new Intent(DashboardActivity.this, DownloadQuestionService.class);
+                PendingIntent downloadQuestionsPendingIntent =
+                        PendingIntent.getBroadcast(DashboardActivity.this, 0, downloadQuestionsIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+                alarmManager.set(AlarmManager.RTC, nextScheduledTime, downloadQuestionsPendingIntent);
+            }
+        }).start();
     }
 
     @Override
@@ -70,8 +112,7 @@ public class DashboardActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }
-        else {
+        } else {
             super.onBackPressed();
         }
     }
@@ -93,14 +134,11 @@ public class DashboardActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
             return true;
-        }
-        else if(id == R.id.action_settings){
+        } else if (id == R.id.action_settings) {
             return true;
-        }
-        else if(id == R.id.action_feedback){
+        } else if (id == R.id.action_feedback) {
             return true;
-        }
-        else if(id == R.id.action_logout){
+        } else if (id == R.id.action_logout) {
             new LogOutTask().execute();
             return true;
         }
@@ -121,14 +159,12 @@ public class DashboardActivity extends AppCompatActivity
         return true;
     }
 
-    public void navigateMenu(int id){
+    public void navigateMenu(int id) {
         if (id == R.id.nav_add_course) {
             startActivity(new Intent(getBaseContext(), AddCourseActivity.class));
-        }
-        else if (id == R.id.nav_profile) {
+        } else if (id == R.id.nav_profile) {
             startActivity(new Intent(getBaseContext(), UserProfileActivity.class));
-        }
-        else if (id == R.id.nav_pdf_reader) {
+        } else if (id == R.id.nav_pdf_reader) {
 
         }
     }
@@ -140,14 +176,14 @@ public class DashboardActivity extends AppCompatActivity
         startActivity(takeQuizIntent);
     }
 
-    private class LogOutTask extends AsyncTask<Void, Void, Void>{
+    private class LogOutTask extends AsyncTask<Void, Void, Void> {
         boolean logoutSuccessful;
         ProgressDialog prog;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            prog = new ProgressDialog(DashboardActivity.this);
+            prog = new ProgressDialog(DashboardActivity.this, R.style.alertDialog);
             prog.setMessage("Logging out");
             prog.setCancelable(false);
             prog.setIndeterminate(true);
@@ -157,6 +193,7 @@ public class DashboardActivity extends AppCompatActivity
 
         @Override
         protected Void doInBackground(Void... voids) {
+            startService(new Intent(getApplicationContext(), UploadTestResultService.class));
             logoutSuccessful = new HTTPUserAccountService(getApplicationContext()).signOutUser();
             return null;
         }
@@ -165,10 +202,10 @@ public class DashboardActivity extends AppCompatActivity
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             prog.dismiss();
-            if (logoutSuccessful){
-                Toast.makeText(getBaseContext(), "logout successful!", Toast.LENGTH_SHORT).show();
+            if (logoutSuccessful) {
                 startActivity(new Intent(DashboardActivity.this, LoginActivity.class));
-            }else{
+                finish();
+            } else {
                 Toast.makeText(getBaseContext(), "logout unsuccessful!", Toast.LENGTH_SHORT).show();
             }
 

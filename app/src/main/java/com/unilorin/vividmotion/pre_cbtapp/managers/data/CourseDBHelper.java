@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.unilorin.vividmotion.pre_cbtapp.models.Course;
 
@@ -17,6 +18,7 @@ import java.util.List;
  */
 
 public class CourseDBHelper extends SQLiteOpenHelper {
+    private static String TAG = "CourseDBHelper";
     private static String dbName = "courses.db";
     private static int dbVersion = 1;
 
@@ -59,6 +61,13 @@ public class CourseDBHelper extends SQLiteOpenHelper {
         contentValues.put(DBContract.CoursesEntry.levelValueColumn, newCourse.getLevelValue());
 
         database.insert(DBContract.CoursesEntry.tableName, null, contentValues);
+        database.close();
+    }
+
+    public void registerNewCourses(List<Course> courses){
+        for (Course c : courses){
+            registerNewCourse(c);
+        }
     }
 
     public List<Course> getAssignedCourses(){
@@ -86,6 +95,7 @@ public class CourseDBHelper extends SQLiteOpenHelper {
             assignedCourses.add(c);
         }
         cursor.close();
+        database.close();
 
         return assignedCourses;
     }
@@ -102,6 +112,26 @@ public class CourseDBHelper extends SQLiteOpenHelper {
 
         database.update(DBContract.CoursesEntry.tableName, contentValues, DBContract.CoursesEntry.courseCodeColumn+"=?",
                 new String[]{course.getCourseCode()});
+
+        database.close();
+    }
+
+    public List<Long> getIdsForAssignedCourses(){
+        SQLiteDatabase database = this.getReadableDatabase();
+        Cursor cursor = database.query(DBContract.CoursesEntry.tableName, new String[]{
+                DBContract.CoursesEntry.idColumn
+        }, null, null, null, null, null);
+
+        cursor.moveToFirst();
+        List<Long> courseIds = new ArrayList<>();
+        for (int i = 0; i < cursor.getCount(); i++){
+            courseIds.add(cursor.getLong(cursor.getColumnIndex(DBContract.CoursesEntry.idColumn)));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        database.close();
+
+        return courseIds;
     }
 
     public List<String> getCodesForAssignedCourses(){
@@ -117,8 +147,18 @@ public class CourseDBHelper extends SQLiteOpenHelper {
             cursor.moveToNext();
         }
         cursor.close();
+        database.close();
 
         return courseCodes;
     }
 
+    public void emptyDatabase(){
+        try {
+            SQLiteDatabase database = this.getWritableDatabase();
+            database.delete(DBContract.CoursesEntry.tableName, null, null);
+            database.close();
+        }catch (Exception e){
+            Log.e(TAG, e.getMessage());
+        }
+    }
 }

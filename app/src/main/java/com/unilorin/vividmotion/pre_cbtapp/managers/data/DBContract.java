@@ -23,4 +23,9 @@ public class DBContract {
         String correctAnswerIndexColumn = "correctAnswerIndexColumn";
         String courseIdColumn = "courseIdColumn";
     }
+    public interface TestResultEntry extends BaseColumns{
+        String tableName = "testResult";
+        String objectInJsonColumn = "objectInJsonColumn";
+        String uploadStatusColumn = "uploadStatusColumn";
+    }
 }

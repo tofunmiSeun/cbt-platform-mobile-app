@@ -6,8 +6,10 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.unilorin.vividmotion.pre_cbtapp.managers.data.CourseDBHelper;
+import com.unilorin.vividmotion.pre_cbtapp.managers.data.QuestionDBHelper;
 import com.unilorin.vividmotion.pre_cbtapp.managers.data.SharedPreferenceContract;
 import com.unilorin.vividmotion.pre_cbtapp.models.Course;
+import com.unilorin.vividmotion.pre_cbtapp.models.Question;
 import com.unilorin.vividmotion.pre_cbtapp.models.UpdateUserAssignedCoursesRequestObject;
 import com.unilorin.vividmotion.pre_cbtapp.models.User;
 import com.unilorin.vividmotion.pre_cbtapp.network.URLContract;
@@ -68,7 +70,13 @@ public class HTTPCourseService {
         }
     }
 
-    public boolean assignCoursesToUser(List<Course> courses){
+    public boolean assignCourseToUser(Course course){
+        List<Course> courseList = new ArrayList<>();
+        courseList.add(course);
+        return assignCoursesToUser(courseList);
+    }
+
+    private boolean assignCoursesToUser(List<Course> courses){
         try {
             SharedPreferences sharedPreferences = appContext.getSharedPreferences(SharedPreferenceContract.FILE_NAME, MODE_PRIVATE);
             User currentUser = new Gson().fromJson(sharedPreferences.getString(SharedPreferenceContract.USER_ACCOUNT_JSON_STRING, null), User.class);
@@ -77,15 +85,18 @@ public class HTTPCourseService {
             requestObject.emailAddress = currentUser.getEmailAddress();
             requestObject.coursesToUpdate = courses;
 
-            ResponseEntity responseEntity = restTemplate.postForEntity(URLContract.UPDATE_USER_ASSIGNED_COURSES, requestObject, null);
+            ResponseEntity<UpdateCoursesResponseObject> responseEntity = restTemplate.postForEntity(URLContract.UPDATE_USER_ASSIGNED_COURSES,
+                    requestObject, UpdateCoursesResponseObject.class );
 
             if (responseEntity.getStatusCode() == HttpStatus.OK){
                 CourseDBHelper courseDBHelper = new CourseDBHelper(appContext);
                 for (Course c : courses) {
                     courseDBHelper.registerNewCourse(c);
                 }
-            }
 
+                QuestionDBHelper questionDBHelper = new QuestionDBHelper(appContext);
+                questionDBHelper.saveQuestions(responseEntity.getBody().questions);
+            }
             return true;
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
@@ -93,13 +104,11 @@ public class HTTPCourseService {
         }
     }
 
-    public boolean assignCourseToUser(Course course){
-            List<Course> courseList = new ArrayList<>();
-            courseList.add(course);
-            return assignCoursesToUser(courseList);
-    }
-
     private class CourseResponseObject {
         private List<Course> courses;
+    }
+
+    private class UpdateCoursesResponseObject{
+        private List<Question> questions;
     }
 }

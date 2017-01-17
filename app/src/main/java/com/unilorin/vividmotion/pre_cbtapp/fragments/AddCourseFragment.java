@@ -9,12 +9,15 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import com.unilorin.vividmotion.pre_cbtapp.R;
 import com.unilorin.vividmotion.pre_cbtapp.models.Course;
@@ -31,6 +34,7 @@ import java.util.List;
  */
 public class AddCourseFragment extends Fragment implements SearchView.OnQueryTextListener {
 
+    private static String TAG = "AddCourseFragment";
     private static final String ARG_COLUMN_COUNT = "column-count";
 
     private int mColumnCount = 1;
@@ -39,6 +43,10 @@ public class AddCourseFragment extends Fragment implements SearchView.OnQueryTex
     private List<Course> mItems;
     private AddCourseRecyclerViewAdapter mAdapter;
     private OnCourseSelectedListener mListener;
+
+    RelativeLayout progressLayout;
+    RelativeLayout noCoursesLayout;
+    Button refreshButton;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -83,9 +91,9 @@ public class AddCourseFragment extends Fragment implements SearchView.OnQueryTex
         View view = inflater.inflate(R.layout.fragment_course_list, container, false);
 
         // Set the adapter
-        if (view instanceof RecyclerView) {
+        if (view.findViewById(R.id.list) instanceof RecyclerView) {
             Context context = view.getContext();
-            mRecyclerView = (RecyclerView) view;
+            mRecyclerView = (RecyclerView) view.findViewById(R.id.list);
             if (mColumnCount <= 1) {
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             }
@@ -93,6 +101,17 @@ public class AddCourseFragment extends Fragment implements SearchView.OnQueryTex
                 mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
         }
+
+        progressLayout = (RelativeLayout) view.findViewById(R.id.progressLayout);
+        noCoursesLayout = (RelativeLayout) view.findViewById(R.id.noCoursesLayout);
+        refreshButton = (Button) view.findViewById(R.id.refreshButton);
+        refreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onStart();
+            }
+        });
+
         return view;
     }
 
@@ -177,6 +196,13 @@ public class AddCourseFragment extends Fragment implements SearchView.OnQueryTex
     private class LoadAvailableCoursesTask extends AsyncTask<Void, Void, Void>{
 
         @Override
+        protected void onPreExecute(){
+            progressLayout.setVisibility(View.VISIBLE);
+            noCoursesLayout.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.GONE);
+        }
+
+        @Override
         protected Void doInBackground(Void... params) {
             HTTPCourseService courseService = new HTTPCourseService(getActivity().getApplicationContext());
             mItems = courseService.getAvailableCourses();
@@ -191,10 +217,16 @@ public class AddCourseFragment extends Fragment implements SearchView.OnQueryTex
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if (mItems != null){
+            progressLayout.setVisibility(View.GONE);
+
+            if (mItems != null && mItems.size() > 0){
+                mRecyclerView.setVisibility(View.VISIBLE);
                 mAdapter = new AddCourseRecyclerViewAdapter(mItems, mListener);
                 mRecyclerView.setAdapter(mAdapter);
+            }else{
+                noCoursesLayout.setVisibility(View.VISIBLE);
             }
+
         }
     }
 }

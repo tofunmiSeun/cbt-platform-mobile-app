@@ -54,7 +54,7 @@ public class TestAssessmentDialogFragment extends DialogFragment implements View
         courseCodeTextView.setText(courseCode);
         totalQuestionsTextView.setText(String.valueOf(testResult.getTotalQuestionsCount()));
         questionsAnsweredTextView.setText(String.valueOf(testResult.getQuestionsAnsweredCount()));
-        correctAnswersTextView.setText(String.valueOf(testResult.getCorrectAnswersCount()));
+        correctAnswersTextView.setText(String.valueOf(testResult.getCorrectAnswerCount()));
         closeDialogButton.setOnClickListener(this);
         finishTestButton.setOnClickListener(this);
 
@@ -68,6 +68,7 @@ public class TestAssessmentDialogFragment extends DialogFragment implements View
         }
         else if (view == finishTestButton){
             startActivity(new Intent(getActivity(), DashboardActivity.class));
+            getActivity().finish();
         }
     }
 }

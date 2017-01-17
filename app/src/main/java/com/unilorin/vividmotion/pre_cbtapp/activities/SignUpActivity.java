@@ -1,10 +1,15 @@
 package com.unilorin.vividmotion.pre_cbtapp.activities;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +21,9 @@ import com.unilorin.vividmotion.pre_cbtapp.models.SignUpResponseStatus;
 import com.unilorin.vividmotion.pre_cbtapp.models.User;
 import com.unilorin.vividmotion.pre_cbtapp.network.services.ServiceFactory;
 import com.unilorin.vividmotion.pre_cbtapp.network.services.UserAccountService;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -42,6 +50,37 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         signUpButton = (Button) findViewById(R.id.signUpButton);
         signInTextView = (TextView) findViewById(R.id.signInTextView);
 
+        TextWatcher watcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                Pattern pattern = Pattern.compile(".+@.+");
+                Matcher matcher = pattern.matcher(emailAddressEditText.getText().toString());
+
+                if (!passwordEditText.getText().toString().isEmpty() && matcher.matches()
+                && !phoneNumberEditText.getText().toString().isEmpty() && !nameEditText.getText().toString().isEmpty()){
+                    signUpButton.setEnabled(true);
+                }else{
+                    signUpButton.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        };
+
+        nameEditText.addTextChangedListener(watcher);
+        emailAddressEditText.addTextChangedListener(watcher);
+        passwordEditText.addTextChangedListener(watcher);
+        phoneNumberEditText.addTextChangedListener(watcher);
+
+        signUpButton.setEnabled(false);
         signUpButton.setOnClickListener(this);
         signInTextView.setOnClickListener(this);
     }
@@ -57,11 +96,36 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    private void showAlertDialog(String title, String message) {
+        AlertDialog alertDialog = new AlertDialog.Builder(SignUpActivity.this, R.style.alertDialog).create();
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(message);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+
     private class RegisterUserTask extends AsyncTask<Void, Void, SignUpResponseStatus> {
 
         private final String name = nameEditText.getText().toString();
         private final String emailAddress = emailAddressEditText.getText().toString();
         private final String password = passwordEditText.getText().toString();
+        ProgressDialog prog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            prog = new ProgressDialog(SignUpActivity.this, R.style.alertDialog);
+            prog.setMessage("Logging in...");
+            prog.setCancelable(false);
+            prog.setIndeterminate(true);
+            prog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            prog.show();
+        }
 
         @Override
         protected SignUpResponseStatus doInBackground(Void... params) {
@@ -77,25 +141,21 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         @Override
         protected void onPostExecute(SignUpResponseStatus result) {
             super.onPostExecute(result);
+            prog.dismiss();
             switch (result) {
                 case ACCEPTED:
-
-                    SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferenceContract.FILE_NAME, MODE_PRIVATE);
-                    sharedPreferences.edit()
-//                            .putString(SharedPreferenceContract.NAME, name)
-                            .putString(SharedPreferenceContract.EMAIL, emailAddress)
-                            .putString(SharedPreferenceContract.PASSWORD, password)
-                            .putBoolean(SharedPreferenceContract.IS_LOGGED_IN, true).apply();
                     //TODO: do appropriate stuff
-
                     startActivity(new Intent(SignUpActivity.this, SetupActivity.class));
-
+                    finish();
                     break;
                 case EMAIL_ALREADY_IN_USE:
                     //TODO: do appropriate stuff
+                    emailAddressEditText.setText("");
+                    showAlertDialog("", "This email address is already in use. Please use another email address.");
                     break;
                 case UNKNOWN_ERROR:
                     //TODO: do appropriate stuff
+                    showAlertDialog("", "An unknown error has occurred. Please try again.");
                     break;
             }
         }

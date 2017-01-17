@@ -1,8 +1,11 @@
 package com.unilorin.vividmotion.pre_cbtapp.activities;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatSpinner;
 import android.view.View;
@@ -23,6 +26,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
 
     private static final int TASK_GET_FACULTIES = 0;
     private static final int TASK_GET_DEPARTMENTS = 1;
+    private static final int TASK_SAVE_STUDENT_PROFILE = 2;
 
     private AppCompatSpinner facultySpinner;
     private AppCompatSpinner departmentSpinner;
@@ -44,7 +48,7 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         instantiateViewObjects();
     }
 
-    void instantiateViewObjects(){
+    void instantiateViewObjects() {
         facultySpinner = (AppCompatSpinner) findViewById(R.id.facultySpinner);
         departmentSpinner = (AppCompatSpinner) findViewById(R.id.departmentSpinner);
         levelSpinner = (AppCompatSpinner) findViewById(R.id.levelSpinner);
@@ -54,14 +58,14 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
         new SetUpStudentProfileTask(TASK_GET_FACULTIES).execute();
     }
 
-    private void setUpFacultySelectBox(final List<Faculty> faculties){
-        String [] facultyNames = new String [faculties.size()];
-        for (int i = 0; i < facultyNames.length; i++){
+    private void setUpFacultySelectBox(final List<Faculty> faculties) {
+        String[] facultyNames = new String[faculties.size()];
+        for (int i = 0; i < facultyNames.length; i++) {
             facultyNames[i] = faculties.get(i).getName();
         }
 
@@ -81,9 +85,10 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
             }
         });
     }
-    private void setUpDepartmentSelectBox(final List<Department> departments){
-        String [] departmentNames = new String [departments.size()];
-        for (int i = 0; i < departmentNames.length; i++){
+
+    private void setUpDepartmentSelectBox(final List<Department> departments) {
+        String[] departmentNames = new String[departments.size()];
+        for (int i = 0; i < departmentNames.length; i++) {
             departmentNames[i] = departments.get(i).getName();
         }
 
@@ -104,9 +109,9 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    private void setUpLevelSelectBox(){
-        String [] levels = new String[selectedDepartment.getCourseDurationInYears()];
-        for (int i = 0; i < levels.length; i++){
+    private void setUpLevelSelectBox() {
+        String[] levels = new String[selectedDepartment.getCourseDurationInYears()];
+        for (int i = 0; i < levels.length; i++) {
             levels[i] = "" + ((i + 1) * 100);
         }
 
@@ -126,60 +131,89 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
+    private void showAlertDialog(String title, String message) {
+        AlertDialog alertDialog = new AlertDialog.Builder(SetupActivity.this, R.style.alertDialog).create();
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(message);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+    }
+
     @Override
     public void onClick(View v) {
-        if (v == proceedButton){
-            StudentProfile studentProfile = new StudentProfile();
-            studentProfile.setFaculty(selectedFaculty);
-            studentProfile.setDepartment(selectedDepartment);
-            studentProfile.setNumericalValueOfStudentLevel(selectedLevelValue);
-
-            final StudentProfile profileToSave = studentProfile;
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    boolean result = studentProfileService.saveStudentProfileForCurrentUser(profileToSave);
-                    if (result){
-                        startActivity(new Intent(SetupActivity.this, DashboardActivity.class));
-                    }else{
-                        //TODO: issue 'an error occurred' message
-                    }
-                }
-            }).start();
+        if (v == proceedButton) {
+            new SetUpStudentProfileTask(TASK_SAVE_STUDENT_PROFILE).execute();
         }
     }
 
-    private class SetUpStudentProfileTask extends AsyncTask<Void, Void, Void>{
+    private class SetUpStudentProfileTask extends AsyncTask<Void, Void, Void> {
         private int taskTag;
         List<Faculty> faculties;
         List<Department> departments;
+        ProgressDialog prog;
 
-        private SetUpStudentProfileTask(Integer tag){
+        private boolean result;
+
+        private SetUpStudentProfileTask(Integer tag) {
             this.taskTag = tag;
         }
 
         @Override
+        protected void onPreExecute() {
+            prog = new ProgressDialog(SetupActivity.this, R.style.alertDialog);
+            prog.setMessage("Setting up profile...");
+            prog.setCancelable(false);
+            prog.setIndeterminate(true);
+            prog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            prog.show();
+            super.onPreExecute();
+        }
+
+        @Override
         protected Void doInBackground(Void... params) {
-            switch (taskTag){
+            switch (taskTag) {
                 case TASK_GET_FACULTIES:
                     faculties = studentProfileService.getAllFaculties();
                     break;
                 case TASK_GET_DEPARTMENTS:
                     departments = studentProfileService.getDepartmentForFaculty(selectedFaculty.getId());
                     break;
+                case TASK_SAVE_STUDENT_PROFILE:
+                    StudentProfile studentProfile = new StudentProfile();
+                    studentProfile.setFaculty(selectedFaculty);
+                    studentProfile.setDepartment(selectedDepartment);
+                    studentProfile.setNumericalValueOfStudentLevel(selectedLevelValue);
+
+                    result = studentProfileService.saveStudentProfileForCurrentUser(studentProfile);
+                    break;
             }
             return null;
         }
 
         @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            switch (taskTag){
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            prog.dismiss();
+            switch (taskTag) {
                 case TASK_GET_FACULTIES:
                     setUpFacultySelectBox(faculties);
                     break;
                 case TASK_GET_DEPARTMENTS:
                     setUpDepartmentSelectBox(departments);
+                    break;
+                case TASK_SAVE_STUDENT_PROFILE:
+                    if (result) {
+                        startActivity(new Intent(SetupActivity.this, DashboardActivity.class));
+                        finish();
+                    } else {
+                        //TODO: issue 'an error occurred' message
+                        showAlertDialog("", "An error occurred. Please try again.");
+                    }
                     break;
             }
         }

@@ -37,8 +37,18 @@
         <activity
             android:name=".activities.AddCourseActivity"
             android:parentActivityName=".activities.DashboardActivity" />
-        <activity android:name=".activities.UserProfileActivity"
-            android:parentActivityName=".activities.DashboardActivity"/>
+        <activity
+            android:name=".activities.UserProfileActivity"
+            android:parentActivityName=".activities.DashboardActivity" />
+
+        <service
+            android:name=".services.DownloadQuestionService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".services.UploadTestResultService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

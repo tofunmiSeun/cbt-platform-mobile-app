@@ -1,5 +1,6 @@
 package com.unilorin.vividmotion.pre_cbtapp.activities;
 
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -18,9 +19,9 @@ public class UserProfileActivity extends AppCompatActivity {
         setTitle("User Profile");
 
         UserProfileFragment userProfileFragment = new UserProfileFragment();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content, userProfileFragment)
-                .addToBackStack(null)
-                .commit();
+        FragmentManager fm = getSupportFragmentManager();
+        fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+        fm.beginTransaction().replace(R.id.content, userProfileFragment).commit();
     }
 }
