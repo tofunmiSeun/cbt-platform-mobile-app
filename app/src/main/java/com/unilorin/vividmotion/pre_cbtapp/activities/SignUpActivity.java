@@ -3,7 +3,6 @@ package com.unilorin.vividmotion.pre_cbtapp.activities;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -16,7 +15,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.unilorin.vividmotion.pre_cbtapp.R;
-import com.unilorin.vividmotion.pre_cbtapp.managers.data.SharedPreferenceContract;
 import com.unilorin.vividmotion.pre_cbtapp.models.SignUpResponseStatus;
 import com.unilorin.vividmotion.pre_cbtapp.models.User;
 import com.unilorin.vividmotion.pre_cbtapp.network.services.ServiceFactory;

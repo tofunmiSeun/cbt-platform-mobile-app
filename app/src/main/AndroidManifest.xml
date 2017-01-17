@@ -17,11 +17,14 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.SignUpActivity"
-            android:theme="@style/AppTheme.SignUp" />
+            android:theme="@style/AppTheme.SignUp"
+            android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".activities.LoginActivity"
-            android:theme="@style/AppTheme.SignUp" />
-        <activity android:name=".activities.SetupActivity" />
+            android:theme="@style/AppTheme.SignUp"
+            android:windowSoftInputMode="stateHidden"/>
+        <activity android:name=".activities.SetupActivity"
+            android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".activities.SplashActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">

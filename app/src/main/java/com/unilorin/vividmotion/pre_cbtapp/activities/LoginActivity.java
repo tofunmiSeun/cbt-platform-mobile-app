@@ -145,6 +145,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             startActivity(new Intent(LoginActivity.this, SetupActivity.class));
                         }
                         finish();
+                        //overridePendingTransition(R.anim.slide_out_right, android.R.anim.slide_in_left);
                     }
                     break;
                 case INCORRECT_PASSWORD:
