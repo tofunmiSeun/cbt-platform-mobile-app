@@ -142,17 +142,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             prog.dismiss();
             switch (result) {
                 case ACCEPTED:
-                    //TODO: do appropriate stuff
                     startActivity(new Intent(SignUpActivity.this, SetupActivity.class));
                     finish();
                     break;
                 case EMAIL_ALREADY_IN_USE:
-                    //TODO: do appropriate stuff
                     emailAddressEditText.setText("");
                     showAlertDialog("", "This email address is already in use. Please use another email address.");
                     break;
                 case UNKNOWN_ERROR:
-                    //TODO: do appropriate stuff
                     showAlertDialog("", "An unknown error has occurred. Please try again.");
                     break;
             }

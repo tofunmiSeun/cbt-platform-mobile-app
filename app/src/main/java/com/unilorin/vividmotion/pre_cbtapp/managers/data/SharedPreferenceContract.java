@@ -7,7 +7,7 @@ public interface SharedPreferenceContract {
     String FILE_NAME = "pre-cbt";
     String USER_ACCOUNT_JSON_STRING = "user-object";
     String SRRVICES_STARTED = "services-started";
-    String FACULTY = "faculty";
+    String PROFILE_PICTURE_STRING = "profile-picture";
     String DEPARTMENT = "department";
     String EMAIL = "e-mail";
     String PHONE_NUMBER = "phone-number";

@@ -18,13 +18,15 @@
         <activity
             android:name=".activities.SignUpActivity"
             android:theme="@style/AppTheme.SignUp"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.LoginActivity"
             android:theme="@style/AppTheme.SignUp"
-            android:windowSoftInputMode="stateHidden"/>
-        <activity android:name=".activities.SetupActivity"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".activities.SetupActivity"
+            android:theme="@style/AppTheme.SignUp"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activities.SplashActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
@@ -51,7 +53,10 @@
         <service
             android:name=".services.UploadTestResultService"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true" />
+
+        <activity android:name=".activities.ChooseProfilePictureActivity"
+            android:theme="@style/AppTheme.SignUp"></activity>
     </application>
 
 </manifest>

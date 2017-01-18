@@ -189,7 +189,6 @@ public class AddCourseFragment extends Fragment implements SearchView.OnQueryTex
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnCourseSelectedListener {
-        // TODO: Update argument type and name
         void onCourseSelected(Course item);
     }
 

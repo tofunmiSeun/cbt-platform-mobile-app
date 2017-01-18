@@ -3,6 +3,7 @@ package com.unilorin.vividmotion.pre_cbtapp.activities;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.unilorin.vividmotion.pre_cbtapp.R;
+import com.unilorin.vividmotion.pre_cbtapp.managers.data.SharedPreferenceContract;
 import com.unilorin.vividmotion.pre_cbtapp.models.Department;
 import com.unilorin.vividmotion.pre_cbtapp.models.Faculty;
 import com.unilorin.vividmotion.pre_cbtapp.models.StudentProfile;
@@ -215,10 +217,15 @@ public class SetupActivity extends AppCompatActivity implements View.OnClickList
                 case TASK_SAVE_STUDENT_PROFILE:
                     if (result) {
                         //overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                        startActivity(new Intent(SetupActivity.this, DashboardActivity.class));
+                        SharedPreferences sharedPreferences = getSharedPreferences(SharedPreferenceContract.FILE_NAME, MODE_PRIVATE);
+                        if (sharedPreferences.contains(SharedPreferenceContract.PROFILE_PICTURE_STRING)){
+                            startActivity(new Intent(SetupActivity.this, DashboardActivity.class));
+                        }
+                        else{
+                            startActivity(new Intent(SetupActivity.this, ChooseProfilePictureActivity.class));
+                        }
                         finish();
                     } else {
-                        //TODO: issue 'an error occurred' message
                         showAlertDialog("", "An error occurred. Please try again.");
                     }
                     break;

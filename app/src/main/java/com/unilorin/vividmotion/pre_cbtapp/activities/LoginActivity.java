@@ -149,17 +149,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                     break;
                 case INCORRECT_PASSWORD:
-                    //TODO: do appropriate stuff
                     passwordEditText.setText("");
                     showAlertDialog("", "The password you entered is incorrect. Please try again.");
                     break;
                 case NO_ACCOUNT_FOR_THIS_EMAIL:
-                    //TODO: do appropriate stuff
                     emailAddressEditText.setText("");
                     showAlertDialog("", "There is no account for this email address.");
                     break;
                 case UNKNOWN_ERROR:
-                    //TODO: do appropriate stuff
                     showAlertDialog("", "An unknown error has occurred. Please try again.");
                     break;
             }

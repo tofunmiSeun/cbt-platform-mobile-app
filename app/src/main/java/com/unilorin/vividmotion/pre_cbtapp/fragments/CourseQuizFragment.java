@@ -201,7 +201,6 @@ public class CourseQuizFragment extends Fragment implements SearchView.OnQueryTe
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnCourseQuizSelectedListener {
-        // TODO: Update argument type and name
         void onCourseQuizSelected(Course item);
     }
 }
