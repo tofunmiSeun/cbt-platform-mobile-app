@@ -159,6 +159,7 @@ public class HTTPUserAccountService implements UserAccountService {
         // Delete test results and course and questions and attempted questions list
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(SharedPreferenceContract.USER_ACCOUNT_JSON_STRING);
+        editor.remove(SharedPreferenceContract.PROFILE_PICTURE_STRING);
         editor.apply();
 
         courseDBHelper.emptyDatabase();
