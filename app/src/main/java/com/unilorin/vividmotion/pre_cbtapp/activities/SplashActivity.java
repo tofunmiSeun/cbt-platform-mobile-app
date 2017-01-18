@@ -35,9 +35,11 @@ public class SplashActivity extends AppCompatActivity {
                     startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                 } else if (currentUser.getStudentProfile() == null) {
                     startActivity(new Intent(SplashActivity.this, SetupActivity.class));
-                }else if (!sharedPreferences.contains(SharedPreferenceContract.PROFILE_PICTURE_STRING)) {
-                    startActivity(new Intent(SplashActivity.this, ChooseProfilePictureActivity.class));
-                } else {
+                }
+                //else if (!sharedPreferences.contains(SharedPreferenceContract.PROFILE_PICTURE_STRING)) {
+                //  startActivity(new Intent(SplashActivity.this, ChooseProfilePictureActivity.class));
+                //}
+                else {
                     startActivity(new Intent(SplashActivity.this, DashboardActivity.class));
                 }
                 finish();

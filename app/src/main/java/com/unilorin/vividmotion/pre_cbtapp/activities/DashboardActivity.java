@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -21,7 +22,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,20 +71,22 @@ public class DashboardActivity extends AppCompatActivity
 
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.userNameTextView)).setText(currentUser.getName());
         ((TextView) navigationView.getHeaderView(0).findViewById(R.id.trendTextView)).setText("On a streak.");
-        ImageView profilePicImageView = (ImageView) navigationView.getHeaderView(0).findViewById(R.id.imageHolder);
+        ImageView profilePicImageView = (ImageView)
+                ((FrameLayout) navigationView.getHeaderView(0).findViewById(R.id.imageViewHolder)).getChildAt(0);
 
-        String profilePicString = sharedPreferences.getString(SharedPreferenceContract.PROFILE_PICTURE_STRING, "");
-        try {
-            if (!profilePicString.equals(String.valueOf("EMPTY"))) {
-                byte[] b = Base64.decode(profilePicString.getBytes(), 0);
-                Bitmap myBitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
-                profilePicImageView.setImageBitmap(myBitmap);
+        if (sharedPreferences.contains(SharedPreferenceContract.PROFILE_PICTURE_STRING)){
+            String profilePicString = sharedPreferences.getString(SharedPreferenceContract.PROFILE_PICTURE_STRING, "");
+            try {
+                if (!profilePicString.equals(String.valueOf("EMPTY"))) {
+                    byte[] b = Base64.decode(profilePicString.getBytes(), 0);
+                    Bitmap myBitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+                    profilePicImageView.setImageBitmap(myBitmap);
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
             }
         }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-
 
         CourseQuizFragment courseQuizFragment = CourseQuizFragment.newInstance(1);
         FragmentManager fm = getSupportFragmentManager();

@@ -55,16 +55,18 @@ public class UserProfileFragment extends Fragment {
         departmentTextView.setText(currentUser.getStudentProfile().getDepartment().getName());
         levelTextView.setText(getLevelString(currentUser.getStudentProfile().getNumericalValueOfStudentLevel()));
 
-        String profilePicString = sharedPreferences.getString(SharedPreferenceContract.PROFILE_PICTURE_STRING, "");
-        try {
-            if (!profilePicString.equals(String.valueOf("EMPTY"))) {
-                byte[] b = Base64.decode(profilePicString.getBytes(), 0);
-                Bitmap myBitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
-                profilePicImageView.setImageBitmap(myBitmap);
+        if (sharedPreferences.contains(SharedPreferenceContract.PROFILE_PICTURE_STRING)){
+            String profilePicString = sharedPreferences.getString(SharedPreferenceContract.PROFILE_PICTURE_STRING, "");
+            try {
+                if (!profilePicString.equals(String.valueOf("EMPTY"))) {
+                    byte[] b = Base64.decode(profilePicString.getBytes(), 0);
+                    Bitmap myBitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
+                    profilePicImageView.setImageBitmap(myBitmap);
+                }
             }
-        }
-        catch (Exception e){
-            e.printStackTrace();
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }
         return view;
     }
