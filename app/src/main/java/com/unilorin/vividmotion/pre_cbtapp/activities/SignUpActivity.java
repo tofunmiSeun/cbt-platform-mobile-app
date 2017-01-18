@@ -111,6 +111,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
         private final String name = nameEditText.getText().toString();
         private final String emailAddress = emailAddressEditText.getText().toString();
+        private final String phoneNumber = phoneNumberEditText.getText().toString();
         private final String password = passwordEditText.getText().toString();
         ProgressDialog prog;
 
@@ -129,6 +130,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         protected SignUpResponseStatus doInBackground(Void... params) {
             User user = new User();
             user.setName(name);
+            user.setPhoneNumber(phoneNumber);
             user.setEmailAddress(emailAddress);
             user.setPassword(password);
 

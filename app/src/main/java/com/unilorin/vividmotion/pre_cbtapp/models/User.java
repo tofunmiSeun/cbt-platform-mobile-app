@@ -7,6 +7,7 @@ package com.unilorin.vividmotion.pre_cbtapp.models;
 public class User {
     private Long id;
     private String name;
+    private String phoneNumber;
     private String emailAddress;
     private String password;
 
@@ -26,6 +27,14 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getEmailAddress() {
