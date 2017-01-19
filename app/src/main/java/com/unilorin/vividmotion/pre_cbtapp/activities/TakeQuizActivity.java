@@ -112,6 +112,7 @@ public class TakeQuizActivity extends AppCompatActivity {
             questionsRecyclerView = (RecyclerView) findViewById(R.id.questionsRecyclerView);
             questionsRecyclerViewAdapter = new QuestionsRecyclerViewAdapter(testQuestions, TakeQuizActivity.this);
             questionsRecyclerView.setAdapter(questionsRecyclerViewAdapter);
+            questionsRecyclerView.getRecycledViewPool().setMaxRecycledViews(0, 0);
 
             long testTime = 2 * 60 *1000L;
             timer = new CountDownTimer(testTime, 1000) {

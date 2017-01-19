@@ -53,13 +53,20 @@ public class QuestionsRecyclerViewAdapter extends RecyclerView.Adapter<Questions
         holder.questionNumberTextView.setText(String.valueOf(position + 1));
         holder.questionStatementTextView.setText(question.getQuestion());
         holder.questionsOptionsRadioGroup.setOrientation(LinearLayout.VERTICAL);
-        holder.correctAnswerIndex = question.getCorrectAnswerIndex();
+        holder.index = position;
+
+        if (holder.questionsOptionsRadioGroup != null){
+            holder.questionsOptionsRadioGroup.removeAllViews();
+        }
 
         for (int i = 0; i < question.getOptions().length; i++) {
             RadioButton radioButton = new RadioButton(context);
             radioButton.setId(i);
             radioButton.setText(question.getOptions()[i]);
             holder.questionsOptionsRadioGroup.addView(radioButton);
+            if (question.getSelectedAnswerIndex() == i){
+                radioButton.setChecked(true);
+            }
         }
 
         holder.questionsOptionsRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -67,7 +74,6 @@ public class QuestionsRecyclerViewAdapter extends RecyclerView.Adapter<Questions
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 Log.d("TAG", String.valueOf(i));
                 question.setSelectedAnswerIndex(i);
-                holder.selectedAnswerIndex = i;
             }
         });
 
@@ -112,8 +118,7 @@ public class QuestionsRecyclerViewAdapter extends RecyclerView.Adapter<Questions
         public TextView questionNumberTextView;
         public TextView questionStatementTextView;
         public RadioGroup questionsOptionsRadioGroup;
-        public Integer correctAnswerIndex;
-        public Integer selectedAnswerIndex = Question.NONE_SELECTED;
+        public int index;
 
         public ViewHolder(final View view) {
             super(view);
@@ -124,11 +129,11 @@ public class QuestionsRecyclerViewAdapter extends RecyclerView.Adapter<Questions
         }
 
         public void showCorrectAnswer(){
-            if (selectedAnswerIndex != Question.NONE_SELECTED) {
-                ((RadioButton) questionsOptionsRadioGroup.getChildAt(selectedAnswerIndex))
+            if (mDataSet.get(index).getSelectedAnswerIndex() != Question.NONE_SELECTED) {
+                ((RadioButton) questionsOptionsRadioGroup.getChildAt(mDataSet.get(index).getSelectedAnswerIndex()))
                         .setTextColor(questionsView.getContext().getResources().getColor(R.color.colorAccent));
             }
-            ((RadioButton) questionsOptionsRadioGroup.getChildAt(correctAnswerIndex))
+            ((RadioButton) questionsOptionsRadioGroup.getChildAt(mDataSet.get(index).getCorrectAnswerIndex()))
                     .setTextColor(questionsView.getContext().getResources().getColor(R.color.colorCorrectAnswer));
         }
 
